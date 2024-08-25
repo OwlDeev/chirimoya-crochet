@@ -1,27 +1,27 @@
-import './App.css';
-import AtImage from './components/atoms/at-image/at-image.tsx';
-import AtButton from './components/atoms/at-button/at-button.tsx'
-const imageUrl = '/assets/imgs/hero-test.jpg';
+import "./App.css";
+// import AtImage from './components/atoms/at-image/at-image.tsx';
+// import AtButton from './components/atoms/at-button/at-button.tsx'
+import MlHero from "./components/molecules/ml-hero";
+import MlNavbar from "./components/molecules/ml-navbar";
+const imageUrl = "/assets/imgs/hero-test.jpg";
 
 function App() {
-
   const imgProps = {
     urlAction: "",
     title: "",
     media: imageUrl,
-    altText: ""
-  }
+    altText: "",
+  };
 
   const buttonProps = {
-    text: "prueba"
-  }
+    text: "prueba",
+  };
 
-  console.log(imgProps)
+  console.log(imgProps);
   return (
-    <div className="">
-      <AtImage media={imgProps.media}>
-      </AtImage>
-      <AtButton text={buttonProps.text}></AtButton>
+    <div className="h-screen">
+      <MlNavbar></MlNavbar>
+      <MlHero></MlHero>
     </div>
   );
 }

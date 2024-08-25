@@ -2,7 +2,7 @@ import React from 'react';
 
 interface AtButtonProps {
   text: string;
-  urlAction: number;
+  urlAction: string;
   color: string;
 }
 

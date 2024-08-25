@@ -1,0 +1,6 @@
+.bg-hero-image {
+    background-image: url('/public/assets/imgs/hero-test.jpg'); /* Reemplaza con la ruta a tu imagen */
+    background-size: cover; /* Ajusta la imagen para cubrir todo el área del div */
+    background-position: center; /* Centra la imagen */
+  }
+  
