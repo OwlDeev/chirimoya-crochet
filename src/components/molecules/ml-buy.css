@@ -1,0 +1,30 @@
+.option-one-step {
+    background-color: #ffb8b7;
+    color: white;
+  }
+  
+  .option-two-step {
+    color: #ffb8b7;
+    border-color: #ffb8b7;
+  }
+
+  .option-tree-step {
+    color: #4caf4fc2;
+    border-color: #4caf4f75;
+  }
+
+  .color-text-primary{
+    color: #4caf4fc2;
+  }
+
+  .color-button{
+    background-color: #ffb8b7;
+    color: white;
+  }
+
+  .color-button :hover{
+    background-color: #ffe4e3 !important;
+    color: white  !important;
+  }
+  
+  

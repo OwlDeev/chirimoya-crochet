@@ -1,0 +1,12 @@
+.color-button {
+  background-color: #ffb8b7;
+  color: white;
+}
+
+.div-basic-information {
+  border: 1px;
+  border-color: #ffb8b7;
+  box-shadow: #ffb8b7 20px 20px 20px;
+  border-style: solid;
+  border-radius: 20px;
+}

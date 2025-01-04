@@ -1,0 +1,13 @@
+input[type="email"] {
+    padding-left: 10px; /* Ajusta el valor según lo necesites */
+}
+
+.color-button{
+    background-color: #ffb8b7;
+    color: white;
+  }
+
+  .color-button :hover{
+    background-color: #ffe4e3 !important;
+    color: white  !important;
+  }

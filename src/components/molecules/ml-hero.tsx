@@ -1,22 +1,36 @@
 import React from "react";
-import AtButton from "../atoms/at-button/at-button";
-import "./ml-hero.css"
+import "./ml-hero.css";
+import { Link, useNavigate } from "react-router-dom";
+import { GiClothes } from "react-icons/gi";
 
-interface MlHeroProps {
-  media: any;
-}
+const MlHero: React.FC = () => {
+  const navigate = useNavigate(); // Hook de React Router para la navegación
 
-const MlHero: React.FC<MlHeroProps> = () => {
   return (
-    <div className="flex h-full w-full">
-      <div className="bg-hero-image flex h-full w-full">
-        <div className="flex h-full w-full justify-center items-center">
-          <AtButton
-            text="Revisar productos"
-            color="red"
-            urlAction="click"
-          ></AtButton>
-        </div>
+    <div className="div-main relative w-full h-full">
+      {/* Contenedor Principal */}
+      <div className="relative w-full h-full">
+        <img
+          src="/assets/imgs/hero-test.jpg"
+          alt="Hero Test"
+          className="w-full h-full object-cover cursor-pointer"
+          onClick={() => {
+            navigate("/boutique"); // Redirige al usuario a la página de login
+          }}
+        />
+        {/* Botón Centrado Horizontalmente y Abajo */}
+        <button
+          onClick={() => {
+            navigate("/boutique"); // Redirige al usuario a la página de login
+          }}
+          className="absolute button-cart-hero bottom-4 text-white px-3 py-3 rounded mb-28"
+        >
+          {
+            <div className="flex flex-row">
+              GALLERY<GiClothes className="mt-2 ml-2"></GiClothes>
+            </div>
+          }
+        </button>
       </div>
     </div>
   );

@@ -1,244 +1,259 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { FaCartShopping } from "react-icons/fa6";
 import "./ml-navbar.css";
+import { useCart } from "../context/cart-context";
+import { FaHouse } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa";
+import { FaStore } from "react-icons/fa";
+import { auth, db } from "../../config/firebase-config";
+import {
+  doc,
+  collection,
+  onSnapshot,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
-interface MlNavbarProps {
-  media: any;
-}
+const MlNavbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { toggleCart, productCount } = useCart(); // Usa el contexto para controlar el carrito
+  const [itemCar, setItemCar] = useState(0);
+  const [currentUser, setCurrentUser] = useState(null); // Estado para guardar el usuario actual
+  const [nameUser, setNameUser] = useState("");
 
-const MlNavbar: React.FC<MlNavbarProps> = () => {
+  useEffect(() => {
+    // Escuchar cambios en el estado de autenticación del usuario
+    const unsubscribeAuth = onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        setCurrentUser(user); // Guardar el usuario autenticado
+      } else {
+        setCurrentUser(null); // No hay usuario autenticado
+        // Obtener los productos desde el localStorage
+        const cart =
+          JSON.parse(localStorage.getItem("guestCart") || "[]") || [];
+
+        // Contar los productos
+        const productCount = cart.length;
+        setItemCar(productCount);
+      }
+    });
+
+    return () => unsubscribeAuth(); // Limpiar el listener al desmontar el componente
+  }, []);
+
+  useEffect(() => {
+    // Escuchar cambios en el estado de autenticación del usuario
+    const unsubscribeAuth = onAuthStateChanged(auth, (user: any) => {
+      if (!user) {
+        setItemCar(productCount);
+      }
+    });
+    return () => unsubscribeAuth(); // Limpiar el listener al desmontar el componente
+  }, [productCount]);
+
+  useEffect(() => {
+    const fetchCartItems = () => {
+      // Obtener el usuario actual
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.log("Usuario no autenticado.");
+
+        // Obtener los productos desde el localStorage
+        const cart =
+          JSON.parse(localStorage.getItem("guestCart") || "[]") || [];
+
+        // Contar los productos
+        const productCount = cart.length;
+        setItemCar(productCount);
+        return;
+      }
+
+      const cartRef = doc(db, "carts", currentUser.uid); // Referencia al documento del carrito del usuario
+
+      const fetchUserFullname = async () => {
+        const uid = currentUser.uid; // Reemplaza con el UID del usuario que quieras buscar
+        const fullname = await getFullNameByUid(uid);
+        if (fullname) {
+          setNameUser(fullname);
+        } else {
+          setNameUser("");
+        }
+      };
+
+      fetchUserFullname();
+
+      // Suscribirse a los cambios en tiempo real del documento del carrito
+      const unsubscribe = onSnapshot(cartRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const cartData = docSnap.data();
+          const items = cartData.items || []; // Asegúrate de que sea un array
+
+          // Sumar la cantidad total de ítems en el carrito
+          const totalQuantity = items.reduce(
+            (total: any, item: any) => total + item.quantity,
+            0
+          );
+
+          setItemCar(totalQuantity); // Actualizar el estado con la cantidad total
+        } else {
+          console.log("El carrito no existe.");
+        }
+      });
+
+      // Limpiar la suscripción al desmontar el componente
+      return () => unsubscribe();
+    };
+
+    fetchCartItems();
+  }, [currentUser]); // Solo se ejecuta al montar el componente
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const getFullNameByUid = async (uid: string) => {
+    try {
+      // Referencia a la colección 'user'
+      const userCollectionRef = collection(db, "user");
+
+      // Crear una consulta para buscar por uid
+      const q = query(userCollectionRef, where("uid", "==", uid));
+
+      // Ejecutar la consulta
+      const querySnapshot = await getDocs(q);
+
+      // Verificar si hay documentos en el resultado
+      if (!querySnapshot.empty) {
+        // Obtener el fullname del primer documento
+        const userDoc = querySnapshot.docs[0];
+        const { fullname } = userDoc.data();
+        return fullname; // Retorna el fullname
+      } else {
+        console.log("No se encontró ningún usuario con el uid proporcionado.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error obteniendo el fullname:", error);
+      throw error;
+    }
+  };
+
   return (
-    <div className="flex h-full w-full">
+    <div className="flex w-full">
       <header>
-        {/* <!-- lg+ --> */}
-        <div className="bg-gray-100 border-b border-gray-200">
+        {/* <!-- lg+ (Escritorio) --> */}
+        <div className="bg-white border-b border-gray-200">
           <div className="px-4 mx-auto sm:px-6 lg:px-8">
             <nav className="relative flex items-center justify-between h-16 lg:h-20">
+              {/* Menú de escritorio */}
               <div className="hidden lg:flex lg:items-center lg:space-x-10">
-                <a
-                  href="#"
-                  title=""
-                  className="text-base font-medium text-black"
+                <Link
+                  to="/login"
+                  className="whitespace-nowrap text-base font-medium text-white cursor-pointer items-center button-cart"
                 >
-                  {" "}
-                  Features{" "}
-                </a>
+                  {currentUser ? nameUser : "LOGIN"}
+                  <FaUser className="iconNavbar" />
+                </Link>
 
-                <a
-                  href="#"
-                  title=""
-                  className="text-base font-medium text-black"
+                <Link
+                  to="/home"
+                  className="h-full w-full text-base font-medium text-white cursor-pointer items-center button-cart"
                 >
-                  {" "}
-                  Solutions{" "}
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="text-base font-medium text-black"
-                >
-                  {" "}
-                  Resources{" "}
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="text-base font-medium text-black"
-                >
-                  {" "}
-                  Pricing{" "}
-                </a>
+                  HOME
+                  <FaHouse className="iconNavbar" />
+                </Link>
               </div>
 
+              {/* Logo */}
               <div className="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
                 <div className="flex-shrink-0">
-                  <a href="#" title="" className="flex">
+                  <Link to="/home" className="flex">
                     <img
-                      className="w-auto h-8 lg:h-10"
-                      src="https://cdn.rareblocks.xyz/collection/celebration/images/logo.svg"
-                      alt=""
+                      className="imagenLogo"
+                      src={`${process.env.PUBLIC_URL}/assets/imgs/logo2.png`}
+                      alt="Logo"
                     />
-                  </a>
+                  </Link>
                 </div>
               </div>
 
-              <button
-                type="button"
-                className="flex items-center justify-center ml-auto text-white bg-black rounded-full w-9 h-9 lg:hidden"
-              >
-                <svg
-                  className="w-5 h-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                className="inline-flex p-2 ml-5 text-black transition-all duration-200 rounded-md lg:hidden focus:bg-gray-100 hover:bg-gray-100"
-              >
-                <svg
-                  className="w-6 h-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
-              </button>
-
+              {/* Menú de escritorio y carrito */}
               <div className="hidden lg:flex lg:items-center lg:space-x-10">
-                <a
-                  href="#"
-                  title=""
-                  className="text-base font-medium text-black"
+                <Link
+                  to="/boutique"
+                  className="text-base font-medium text-white cursor-pointer items-center button-cart"
                 >
-                  {" "}
-                  Sign up{" "}
-                </a>
+                  STORE
+                  <FaStore className="iconNavbar" />
+                </Link>
 
-                <a
-                  href="#"
-                  title=""
-                  className="text-base font-medium text-black"
+                {/* Icono del carrito */}
+                <div
+                  onClick={toggleCart}
+                  className="cursor-pointer flex items-center button-cart"
                 >
-                  {" "}
-                  Sign in{" "}
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="flex items-center justify-center w-10 h-10 text-white bg-black rounded-full"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </a>
+                  <span className="text-base font-medium text-white">CART</span>
+                  <FaCartShopping className="iconNavbar"></FaCartShopping>
+                  <span className="text-base font-medium text-white pl-2">
+                    {itemCar}
+                  </span>
+                </div>
               </div>
             </nav>
           </div>
         </div>
 
-        {/* <!-- xs to lg --> */}
-        <nav className="py-4 bg-white lg:hidden">
-          <div className="px-4 mx-auto sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">
-                Menu
-              </p>
-
-              <button
-                type="button"
-                className="inline-flex p-2 text-black transition-all duration-200 rounded-md focus:bg-gray-100 hover:bg-gray-100"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div className="mt-6">
+        {/* Menú móvil desplegable */}
+        {menuOpen && (
+          <div className="bg-white lg:hidden">
+            <nav className="px-4 py-4 mx-auto sm:px-6 lg:px-8">
               <div className="flex flex-col space-y-2">
-                <a
-                  href="#"
-                  title=""
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+                <Link
+                  to="/features"
+                  className="py-2 text-base font-medium text-black"
                 >
-                  {" "}
-                  Features{" "}
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+                  Features
+                </Link>
+                <Link
+                  to="/solutions"
+                  className="py-2 text-base font-medium text-black"
                 >
-                  {" "}
-                  Solutions{" "}
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+                  Solutions
+                </Link>
+                <Link
+                  to="/resources"
+                  className="py-2 text-base font-medium text-black"
                 >
-                  {" "}
-                  Resources{" "}
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+                  Resources
+                </Link>
+                <Link
+                  to="/pricing"
+                  className="py-2 text-base font-medium text-black"
                 >
-                  {" "}
-                  Pricing{" "}
-                </a>
+                  Pricing
+                </Link>
               </div>
-
               <hr className="my-4 border-gray-200" />
-
               <div className="flex flex-col space-y-2">
-                <a
-                  href="#"
-                  title=""
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+                <Link
+                  to="/signup"
+                  className="py-2 text-base font-medium text-black"
                 >
-                  {" "}
-                  Sign up{" "}
-                </a>
-
-                <a
-                  href="#"
-                  title=""
-                  className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
+                  Sign up
+                </Link>
+                <Link
+                  to="/signin"
+                  className="py-2 text-base font-medium text-black"
                 >
-                  {" "}
-                  Sign in{" "}
-                </a>
+                  Sign in
+                </Link>
               </div>
-            </div>
+            </nav>
           </div>
-        </nav>
+        )}
       </header>
     </div>
   );

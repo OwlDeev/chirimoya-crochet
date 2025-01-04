@@ -1,0 +1,65 @@
+.imagenLogo{
+    width: 250px;
+}
+
+.linkMain{
+    display: flex;
+    flex-direction: row;
+}
+
+.divIconNavbar{
+    display: flex;
+    flex-direction: column-reverse;
+    margin-left: 10px;
+}
+
+.iconNavbar{
+    /* display: flex; */
+    justify-content: end;
+    margin-left: 10px;
+    color:white
+}
+
+.button-cart{
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #ffb8b7; /* Color del botón */
+    border: none;
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+    transition: transform 0.2s, box-shadow 0.2s; /* Animación suave */
+}
+
+.button-cart:hover{
+    transform: translateY(-2px); /* Efecto "levitar" */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+}
+
+.button-cart:active {
+    transform: translateY(1px); /* Botón "presionado" */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra más pequeña */
+  }
+/* Estilo para el menú de navegación en pantallas grandes (escritorio) */
+@media (min-width: 1024px) {
+    header{
+        width: 100%;
+    }
+}
+
+/* Estilo para tabletas */
+@media (min-width: 768px) and (max-width: 1023px) {
+    header{
+        width: 100%;
+    }
+}
+
+/* Estilo para móviles (pantallas pequeñas) */
+@media (max-width: 767px) {
+    header{
+        width: 100%;
+    }
+}

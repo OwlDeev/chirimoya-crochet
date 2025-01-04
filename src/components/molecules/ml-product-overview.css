@@ -1,0 +1,58 @@
+.iconNavbar {
+  /* display: flex; */
+  justify-content: end;
+  margin-left: 10px;
+  color: white;
+}
+
+.iconNavbarContinue {
+  /* display: flex; */
+  justify-content: end;
+  margin-left: 10px;
+  color: rgb(79 70 229);
+}
+
+.imageCardModal {
+  width: 100%;
+  border-radius: 20px;
+  object-fit: cover; /* Ajusta la imagen, llenando el contenedor */
+  object-position: center; /* Centra la imagen en el contenedor */
+}
+.div-main-card-module {
+  display: flex;
+  flex-direction: row;
+}
+
+.div-main-card-module-der {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.div-main-card-module-izq {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.div-content-module {
+  padding-bottom: 1px !important;
+  padding-top: 1px !important;
+}
+
+.div-button-product-overview{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+form{
+  width: 100% !important;
+  padding: 10px !important;
+  padding-left: 10px !important;
+    padding-right: 10px !important;
+}

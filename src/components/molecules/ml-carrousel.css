@@ -1,0 +1,41 @@
+.divCarousel{
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  position: absolute;
+  top: 50%; /* Centra verticalmente */
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: #fff; /* Cambia el fondo al pasar el mouse */
+  color: #000; /* Cambia el color del icono */
+}
+
+.swiper-button-prev {
+  left: 20px; /* Ajusta la posición hacia la izquierda */
+}
+
+.swiper-button-next {
+  right: 20px; /* Ajusta la posición hacia la derecha */
+}
+
+.divCarousel {
+    position: relative;
+  }
+  

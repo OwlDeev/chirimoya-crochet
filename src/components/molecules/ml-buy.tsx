@@ -1,0 +1,408 @@
+import React, { useEffect, useState } from "react";
+import "./ml-buy.css";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../../config/firebase-config";
+import { Link, useNavigate } from "react-router-dom";
+import OrPersonalDetail from "../organism/or-personal-detail";
+import OrShipping from "../organism/or-shipping";
+import Swal from "sweetalert2";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { GiConfirmed } from "react-icons/gi";
+import { FaRegTrashCan } from "react-icons/fa6";
+
+const Stepper = () => {
+  const navigate = useNavigate(); // Hook de React Router para la navegación
+  const [currentStep, setCurrentStep] = useState(1);
+  const [personalDetailData, setPersonalDetailData] = useState({});
+  const [shippingData, setShippingData] = useState({});
+  const [subTotal, setSubTotal] = useState(0);
+  const [currentUser, setCurrentUser] = useState(null); // Estado para el usuario actual
+  const [productList, setProductList] = useState<
+    {
+      id: string;
+      desc: string;
+      href: number;
+      description: string;
+      title: string;
+      price: number;
+      srcImage: string;
+      quantity: number;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    // Escuchar cambios en el estado de autenticación
+    const unsubscribeAuth = onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        setCurrentUser(user); // Guardar el usuario autenticado
+      } else {
+        setCurrentUser(null); // Usuario no autenticado
+      }
+    });
+
+    return () => unsubscribeAuth(); // Limpiar el listener al desmontar
+  }, []);
+
+  const getProductList = async () => {
+    try {
+      if (!currentUser) return; // Salir si no hay usuario autenticado
+
+      const cartRef = doc(db, "carts", currentUser["uid"] || ""); // Referencia al carrito del usuario
+
+      // Suscribirse a cambios en tiempo real en el documento del carrito
+      const unsubscribeCart = onSnapshot(cartRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const cartData = docSnap.data();
+          const items = cartData.items || []; // Asegurarse de que sea un array
+
+          // Actualizar la lista de productos con los datos del carrito
+          const formattedItems = items.map((item: any) => ({
+            id: item.id,
+            description: item.description || "",
+            title: item.title || "",
+            price: item.price || 0,
+            quantity: item.quantity || 0,
+            srcImage: item.srcImage || "",
+          }));
+
+          const totalSubTotal = items.reduce(
+            (sum: any, item: any) => sum + item.price * item.quantity,
+            0
+          );
+          setSubTotal(totalSubTotal);
+          setProductList(formattedItems);
+        } else {
+          console.log("No se encontró el carrito para este usuario.");
+          setProductList([]); // Vaciar el carrito si no existe
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getProductList();
+  }, [currentUser]);
+
+  const createOrderInvited = async () => {
+    const cart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+    const uidInvited = `invited-${new Date()
+      .toISOString()
+      .replace(/[-:.TZ]/g, "")}`;
+    const orderRef = doc(db, "orders", uidInvited); // ID único
+    await setDoc(orderRef, {
+      userId: uidInvited,
+      items: cart.items,
+      total: cart.total,
+      timestamp: serverTimestamp(),
+      personalDetail: personalDetailData, // Datos del paso personalDetail
+      shipping: shippingData, // Datos del paso shipping
+      states: [
+        {
+          state: "Pending",
+          date: new Date().toLocaleDateString(), // Fecha actual
+        },
+      ],
+    });
+
+    console.log("Pedido creado exitosamente.");
+    localStorage.removeItem("guestCart");
+  };
+
+  useEffect(() => {
+    if (currentStep === steps.length + 1) {
+      if (!currentUser) {
+        createOrderInvited();
+        return;
+      } else {
+        createOrder();
+      }
+      setCurrentStep(1);
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Order created",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      // /boutique
+      navigate("/boutique"); // Redirige al usuario a la página de login
+    }
+  }, [currentStep]);
+
+  const createOrder = async () => {
+    try {
+      // Obtener el usuario actual
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.error("Usuario no autenticado.");
+        return;
+      }
+
+      const uid = currentUser.uid;
+
+      // Referencia al carrito del usuario
+      const cartRef = doc(db, "carts", uid);
+
+      // Obtener datos del carrito (esto supone que los datos están almacenados localmente o se obtienen directamente del carrito en tiempo real)
+      const cartData = {
+        items: productList,
+        total: 100, // Reemplaza con el total calculado
+      };
+
+      // Crear un nuevo pedido
+      const orderRef = doc(db, "orders", `${uid}-${Date.now()}`); // ID único
+      await setDoc(orderRef, {
+        userId: uid,
+        items: cartData.items,
+        total: cartData.total,
+        timestamp: serverTimestamp(),
+        personalDetail: personalDetailData, // Datos del paso personalDetail
+        shipping: shippingData, // Datos del paso shipping
+        states: [
+          {
+            state: "Pending",
+            date: new Date().toLocaleDateString(), // Fecha actual
+          },
+        ],
+      });
+
+      console.log("Pedido creado exitosamente.");
+
+      // Eliminar el carrito después de crear el pedido
+      await deleteDoc(cartRef);
+
+      //limpia variables
+      setSubTotal(0);
+    } catch (error) {
+      console.error("Error al crear el pedido o eliminar el carrito:", error);
+    }
+  };
+
+  const changeStep = (action: string) => {
+    if (action === "preview") setCurrentStep(currentStep - 1);
+
+    if (action === "next") setCurrentStep(currentStep + 1);
+  };
+
+  const steps = [
+    { id: 1, label: "Shopping Cart" },
+    { id: 2, label: "Personal Details" },
+    { id: 3, label: "Shipping" },
+  ];
+
+  const handleRemoveItem = async (id: any) => {
+    try {
+      if (!currentUser) {
+        console.error("No hay usuario autenticado");
+        return;
+      }
+
+      const cartRef = doc(db, "carts", currentUser["uid"]); // Referencia al carrito del usuario
+
+      // Filtrar los productos para excluir el producto con el id especificado
+      const updatedItems = productList.filter((product) => product.id !== id);
+
+      // Actualizar los items en Firebase
+      await updateDoc(cartRef, {
+        items: updatedItems,
+      });
+
+      // Actualizar la lista de productos en el estado
+      setProductList(updatedItems);
+
+      navigate("/boutique"); // Redirige al usuario a la página de login
+    } catch (error) {
+      console.error("Error al eliminar el producto del carrito:", error);
+    }
+  };
+
+  return (
+    <div className=" flex flex-col h-full w-full">
+      <div className="flex items-start div-main-progress-bar pt-10 pl-48">
+        {steps.map((step, index) => (
+          <div className="flex w-full h-fullborder" key={step.id}>
+            {/* Step */}
+            <div className="flex items-start">
+              <div
+                className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                  step.id < currentStep
+                    ? "option-one-step"
+                    : step.id === currentStep
+                    ? "border-2 option-two-step"
+                    : "border-2 option-tree-step"
+                }`}
+              >
+                {step.id < currentStep ? (
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M5 13l4 4L19 7"
+                    ></path>
+                  </svg>
+                ) : (
+                  step.id
+                )}
+              </div>
+              <span
+                className={`ml-2 ${
+                  step.id <= currentStep
+                    ? "color-text-primary font-medium"
+                    : "color-text-primary"
+                }`}
+              >
+                {step.label}
+              </span>
+            </div>
+            {/* Connector */}
+            {index < steps.length - 1 && (
+              <div
+                className={`mt-5 flex-auto border-t-2 mx-4 ${
+                  step.id < currentStep
+                    ? "color-text-primary"
+                    : "border-gray-300"
+                }`}
+              ></div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Tabla con productos */}
+      {currentStep === 1 && (
+        <div className="pl-20 pr-20 pt-20">
+          <ul role="list" className="-my-6 divide-y divide-gray-200">
+            {productList.map((product) => (
+              <li key={product.id} className="flex py-6">
+                <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
+                  <img
+                    alt={product.description}
+                    src={product.srcImage}
+                    className="size-full object-cover object-center"
+                  />
+                </div>
+
+                <div className="ml-4 flex flex-1 flex-col">
+                  <div>
+                    <div className="flex justify-between text-base font-medium text-gray-900">
+                      <h3>
+                        <a href={""}>{product.title}</a>
+                      </h3>
+                      <p className="ml-4">{product.price + "€"}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-1 items-end justify-between text-sm">
+                    <p className="text-gray-500">
+                      Quantity: {product.quantity}
+                    </p>
+
+                    <div className="flex">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveItem(product.id)}
+                        className="flex flex-row font-medium text-indigo-600 hover:text-indigo-500"
+                      >
+                        Remove
+                        <FaRegTrashCan className="cursor-pointer mt-1 ml-2"></FaRegTrashCan>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex justify-between text-base font-medium text-gray-900 pl-20 pr-20 pt-20">
+            <p>Subtotal</p>
+            <p>${subTotal}</p>
+          </div>
+        </div>
+      )}
+
+      {currentStep === 2 && (
+        <OrPersonalDetail
+          media="some-media-value"
+          onSubmit={(values: any) => {
+            setPersonalDetailData(values);
+            changeStep("next"); // Avanza al siguiente paso
+          }}
+        />
+      )}
+
+      {currentStep === 3 && (
+        <OrShipping
+          onSubmit={(values: any) => {
+            setShippingData(values);
+            changeStep("next"); // Avanzar al siguiente paso
+          }}
+        />
+      )}
+
+      {/* Botones */}
+      {currentStep !== 4 ? (
+        <div className="flex flex-row h-full w-full justify-between p-20">
+          <div className="flex flex-row h-full w-full">
+            {currentStep === 1 ? (
+              <Link
+                to="/boutique"
+                className="color-button flex items-center justify-center rounded-md border border-transparent px-6 py-3 text-base font-medium"
+              >
+                Back
+                <IoMdArrowRoundBack className="mt-1 ml-2" />
+              </Link>
+            ) : (
+              <button
+                onClick={() => changeStep("preview")}
+                className={`color-button flex items-center justify-center rounded-md border border-transparent px-6 py-3 text-base font-medium ${
+                  currentStep === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={currentStep === 1}
+              >
+                Back
+                <IoMdArrowRoundBack className="mt-1 ml-2" />
+              </button>
+            )}
+          </div>
+          <div className="flex flex-row h-full w-full justify-end">
+            {currentStep === 1 ? (
+              <button
+                onClick={() => changeStep("next")}
+                className={`color-button flex justify-end rounded-md border border-transparent px-6 py-3 text-base font-medium`}
+              >
+                Confirm
+                <GiConfirmed className="mt-1 ml-2" />
+              </button>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div></div>
+      )}
+    </div>
+  );
+};
+
+export default Stepper;

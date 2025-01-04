@@ -1,0 +1,27 @@
+.divMainFooter{
+    background-color: black;
+    height: 100px;
+}
+
+.iconRsFooter{
+    color:  #ffb8b7;
+    font-size: 30px;
+    margin-left: 10px;
+}
+
+.textRsFooterDer{
+    color: white;
+    font-size: 20px;
+}
+
+.mlFooterIzq{
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.textRsFooter{
+    color: white;
+    font-size: 20px;
+}

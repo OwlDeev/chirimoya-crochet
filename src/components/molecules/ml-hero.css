@@ -1,6 +1,48 @@
+@font-face {
+  font-family: 'DreamFlourish';
+  src: url('../../../public/assets/fonts/DreamFlourish.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .bg-hero-image {
     background-image: url('/public/assets/imgs/hero-test.jpg'); /* Reemplaza con la ruta a tu imagen */
     background-size: cover; /* Ajusta la imagen para cubrir todo el área del div */
     background-position: center; /* Centra la imagen */
+    width: 100%;
+    height: 100%;
   }
   
+.textMlHero{
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  padding: 50px;
+  border-width: 40px;
+  border-style: solid;
+  border-color: #ffb8b7;
+}
+
+.textMlHeroInicio{
+  font-size: 60px;
+  font-weight: lighter;
+  color: #ffb8b7;
+  font-family: 'DreamFlourish', sans-serif;
+}
+
+.div-main{
+  height: 600px;
+}
+
+.button-cart-hero{
+  padding: 10px 20px;
+  font-size: 30px !important;
+  color: white;
+  background-color: #ffb8b7; /* Color del botón */
+  border: none;
+  border-radius: 8px; /* Bordes redondeados */
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+  left: 45%;
+}
