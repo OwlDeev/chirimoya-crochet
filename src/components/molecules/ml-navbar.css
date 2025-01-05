@@ -43,6 +43,21 @@
     transform: translateY(1px); /* Botón "presionado" */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra más pequeña */
   }
+
+.hamburger-icon {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger-icon div {
+    width: 25px;
+    height: 3px;
+    background-color:  #ffb8b7; 
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
 /* Estilo para el menú de navegación en pantallas grandes (escritorio) */
 @media (min-width: 1024px) {
     header{
@@ -61,5 +76,15 @@
 @media (max-width: 767px) {
     header{
         width: 100%;
+    }
+}
+
+@media (max-width: 1023px) {
+    .hamburger-icon {
+        display: flex;
+    }
+
+    .lg\\:hidden {
+        display: none;
     }
 }

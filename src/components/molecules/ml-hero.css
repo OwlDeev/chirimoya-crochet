@@ -46,3 +46,11 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
   left: 45%;
 }
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .button-cart-hero {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

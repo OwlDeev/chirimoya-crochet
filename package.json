@@ -1,7 +1,7 @@
 {
   "name": "chirimoya-crochet",
-  "description": "Version 2.2, add icons buttons and rows for carousel",
-  "version": "0.2.2",
+  "description": "Version 2.3, add the posibility for buy not usign one user",
+  "version": "0.2.3",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^2.2.0",

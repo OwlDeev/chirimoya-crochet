@@ -95,6 +95,10 @@ const Stepper = () => {
 
         // Actualizar el estado
         setSubTotal(totalSubTotal);
+        localStorage.setItem(
+          "guestTotal",
+          JSON.stringify(totalSubTotal)
+        );
         setProductList(formattedItems);
 
         return; // Salir si no hay usuario autenticado
@@ -142,17 +146,21 @@ const Stepper = () => {
 
   const createOrderInvited = async () => {
     const cart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+    const personalDetail = JSON.parse(localStorage.getItem("guestPersonalDetail") || "[]");
+    const shipping = JSON.parse(localStorage.getItem("guestShipping") || "[]");
+    const total = JSON.parse(localStorage.getItem("guestTotal") || "[]");
+
     const uidInvited = `invited-${new Date()
       .toISOString()
       .replace(/[-:.TZ]/g, "")}`;
     const orderRef = doc(db, "orders", uidInvited); // ID único
     await setDoc(orderRef, {
       userId: uidInvited,
-      items: cart.items,
-      total: cart.total,
+      items: cart,
+      total: total,
       timestamp: serverTimestamp(),
-      personalDetail: personalDetailData, // Datos del paso personalDetail
-      shipping: shippingData, // Datos del paso shipping
+      personalDetail: personalDetail, // Datos del paso personalDetail
+      shipping: shipping, // Datos del paso shipping
       states: [
         {
           state: "Pending",
@@ -169,7 +177,6 @@ const Stepper = () => {
     if (currentStep === steps.length + 1) {
       if (!currentUser) {
         createOrderInvited();
-        return;
       } else {
         createOrder();
       }
@@ -231,6 +238,10 @@ const Stepper = () => {
 
       //limpia variables
       setSubTotal(0);
+      localStorage.setItem(
+        "guestTotal",
+        JSON.stringify(0)
+      );
     } catch (error) {
       console.error("Error al crear el pedido o eliminar el carrito:", error);
     }
@@ -263,6 +274,10 @@ const Stepper = () => {
           0
         );
         setSubTotal(totalSubTotal);
+        localStorage.setItem(
+          "guestTotal",
+          JSON.stringify(totalSubTotal)
+        );
 
         // Guardar los productos actualizados en localStorage
         localStorage.setItem("guestCart", JSON.stringify(updatedItems));

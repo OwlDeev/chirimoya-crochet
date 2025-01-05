@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useState from "react-usestateref";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./or-personal-detail.css";
 import Swal from "sweetalert2";
 import { GiConfirmed } from "react-icons/gi";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../config/firebase-config";
 
 interface MlPersonalDetailProps {
   media: any;
@@ -11,11 +14,28 @@ interface MlPersonalDetailProps {
 }
 
 const MlPersonalDetail: React.FC<MlPersonalDetailProps> = ({ onSubmit }) => {
+  const [currentUser, setCurrentUser] = useState(null); // Estado para el usuario actual
+
+  useEffect(() => {
+    // Escuchar cambios en el estado de autenticación
+    const unsubscribeAuth = onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        setCurrentUser(user); // Guardar el usuario autenticado
+      } else {
+        setCurrentUser(null); // Usuario no autenticado
+      }
+    });
+
+    return () => unsubscribeAuth(); // Limpiar el listener al desmontar
+  }, []);
+
   // Esquema de validación con Yup
   const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
     surname: Yup.string().required("Surname is required"),
-    email: Yup.string().email("Invalid email format").required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
   });
 
   // Formik para manejar el formulario
@@ -27,17 +47,23 @@ const MlPersonalDetail: React.FC<MlPersonalDetailProps> = ({ onSubmit }) => {
     },
     validationSchema,
     onSubmit: (values) => {
-      // Enviar los datos al componente padre
-      onSubmit(values);
+      if (!currentUser) {
+        // Guardar los productos actualizados en localStorage
+        localStorage.setItem("guestPersonalDetail", JSON.stringify(values));
+        onSubmit(values);
+      } else {
+        // Enviar los datos al componente padre
+        onSubmit(values);
 
-      // Mensaje de éxito con SweetAlert
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Details validated successfully",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+        // Mensaje de éxito con SweetAlert
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Details validated successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     },
   });
 
@@ -45,7 +71,10 @@ const MlPersonalDetail: React.FC<MlPersonalDetailProps> = ({ onSubmit }) => {
     <form onSubmit={formik.handleSubmit} className="pl-80 pr-80 pt-20">
       <div className="flex flex-row">
         <div className="w-full mr-4">
-          <label htmlFor="name" className="block text-sm/6 font-medium text-gray-900">
+          <label
+            htmlFor="name"
+            className="block text-sm/6 font-medium text-gray-900"
+          >
             Name
           </label>
           <div className="mt-2">
@@ -65,7 +94,10 @@ const MlPersonalDetail: React.FC<MlPersonalDetailProps> = ({ onSubmit }) => {
           </div>
         </div>
         <div className="w-full ml-4">
-          <label htmlFor="surname" className="block text-sm/6 font-medium text-gray-900">
+          <label
+            htmlFor="surname"
+            className="block text-sm/6 font-medium text-gray-900"
+          >
             Surname
           </label>
           <div className="mt-2">
@@ -80,14 +112,19 @@ const MlPersonalDetail: React.FC<MlPersonalDetailProps> = ({ onSubmit }) => {
               onBlur={formik.handleBlur}
             />
             {formik.touched.surname && formik.errors.surname && (
-              <div className="text-red-500 text-sm">{formik.errors.surname}</div>
+              <div className="text-red-500 text-sm">
+                {formik.errors.surname}
+              </div>
             )}
           </div>
         </div>
       </div>
 
       <div className="mt-4">
-        <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
+        <label
+          htmlFor="email"
+          className="block text-sm/6 font-medium text-gray-900"
+        >
           Email address
         </label>
         <div className="mt-2">
@@ -113,7 +150,7 @@ const MlPersonalDetail: React.FC<MlPersonalDetailProps> = ({ onSubmit }) => {
           className="flex flex-row color-button rounded-md border border-transparent px-6 py-3 text-base font-medium"
         >
           Confirm and Next
-          <GiConfirmed className="mt-1 ml-2"/>
+          <GiConfirmed className="mt-1 ml-2" />
         </button>
       </div>
     </form>

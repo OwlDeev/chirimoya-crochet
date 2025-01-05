@@ -38,4 +38,11 @@
 .divCarousel {
     position: relative;
   }
+
+  @media (max-width: 768px) {
+    .divCarousel img {
+      height: 200px; /* Altura fija en píxeles */
+      width: 100%; /* Ancho completo */
+    }
+  }
   

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./or-shipping.css";
@@ -6,7 +6,8 @@ import ReactFlagsSelect from "react-flags-select";
 import PhoneInput from "react-phone-input-2";
 import Swal from "sweetalert2";
 import { IoBagCheck } from "react-icons/io5";
-
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../config/firebase-config";
 
 interface MlShippingProps {
   onSubmit: (values: {
@@ -20,6 +21,20 @@ interface MlShippingProps {
 }
 
 const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
+  const [currentUser, setCurrentUser] = useState(null); // Estado para el usuario actual
+
+  useEffect(() => {
+    // Escuchar cambios en el estado de autenticación
+    const unsubscribeAuth = onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        setCurrentUser(user); // Guardar el usuario autenticado
+      } else {
+        setCurrentUser(null); // Usuario no autenticado
+      }
+    });
+
+    return () => unsubscribeAuth(); // Limpiar el listener al desmontar
+  }, []);
   // Esquema de validación con Yup
   const validationSchema = Yup.object({
     address: Yup.string().required("Address is required"),
@@ -46,24 +61,33 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
     },
     validationSchema,
     onSubmit: (values) => {
-      // Enviar los datos al componente padre
-      onSubmit(values);
+      if (!currentUser) {
+        // Guardar los productos actualizados en localStorage
+        localStorage.setItem("guestShipping", JSON.stringify(values));
+        onSubmit(values);
+      } else {
+        // Enviar los datos al componente padre
+        onSubmit(values);
 
-      // Mensaje de éxito con SweetAlert
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Shipping details validated successfully",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+        // Mensaje de éxito con SweetAlert
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Shipping details validated successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     },
   });
 
   return (
     <form onSubmit={formik.handleSubmit} className="pl-80 pr-80 pt-20">
       <div>
-        <label htmlFor="address" className="block text-sm font-medium text-gray-900">
+        <label
+          htmlFor="address"
+          className="block text-sm font-medium text-gray-900"
+        >
           Address
         </label>
         <div className="mt-2">
@@ -84,7 +108,10 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
       </div>
 
       <div className="mt-4">
-        <label htmlFor="apartment" className="block text-sm font-medium text-gray-900">
+        <label
+          htmlFor="apartment"
+          className="block text-sm font-medium text-gray-900"
+        >
           Apartment, suite, etc.
         </label>
         <div className="mt-2">
@@ -99,14 +126,19 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
             onBlur={formik.handleBlur}
           />
           {formik.touched.apartment && formik.errors.apartment && (
-            <div className="text-red-500 text-sm">{formik.errors.apartment}</div>
+            <div className="text-red-500 text-sm">
+              {formik.errors.apartment}
+            </div>
           )}
         </div>
       </div>
 
       <div className="mt-4 flex flex-row">
         <div className="w-full">
-          <label htmlFor="country" className="block text-sm font-medium text-gray-900">
+          <label
+            htmlFor="country"
+            className="block text-sm font-medium text-gray-900"
+          >
             Country
           </label>
           <ReactFlagsSelect
@@ -121,7 +153,10 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
           )}
         </div>
         <div className="w-full ml-4">
-          <label htmlFor="city" className="block text-sm font-medium text-gray-900">
+          <label
+            htmlFor="city"
+            className="block text-sm font-medium text-gray-900"
+          >
             City
           </label>
           <div className="mt-2">
@@ -144,7 +179,10 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
 
       <div className="mt-4 flex flex-row">
         <div className="w-full">
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-900">
+          <label
+            htmlFor="phone"
+            className="block text-sm font-medium text-gray-900"
+          >
             Phone
           </label>
           <PhoneInput
@@ -157,7 +195,10 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
           )}
         </div>
         <div className="w-full ml-4">
-          <label htmlFor="postalCode" className="block text-sm font-medium text-gray-900">
+          <label
+            htmlFor="postalCode"
+            className="block text-sm font-medium text-gray-900"
+          >
             Postal code
           </label>
           <div className="mt-2">
@@ -172,7 +213,9 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
               onBlur={formik.handleBlur}
             />
             {formik.touched.postalCode && formik.errors.postalCode && (
-              <div className="text-red-500 text-sm">{formik.errors.postalCode}</div>
+              <div className="text-red-500 text-sm">
+                {formik.errors.postalCode}
+              </div>
             )}
           </div>
         </div>
@@ -184,7 +227,7 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
           className="flex flex-row color-button rounded-md border border-transparent px-6 py-3 text-base font-medium"
         >
           Buy
-          <IoBagCheck className="mt-1 ml-2"/>
+          <IoBagCheck className="mt-1 ml-2" />
         </button>
       </div>
     </form>

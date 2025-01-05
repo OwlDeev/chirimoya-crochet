@@ -202,6 +202,15 @@ const MlNavbar = () => {
                   </span>
                 </div>
               </div>
+
+              {/* Ícono de hamburguesa para móvil */}
+              <div className="lg:hidden flex items-center">
+                <div className="hamburger-icon" onClick={toggleMenu}>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
             </nav>
           </div>
         </div>
@@ -212,40 +221,33 @@ const MlNavbar = () => {
             <nav className="px-4 py-4 mx-auto sm:px-6 lg:px-8">
               <div className="flex flex-col space-y-2">
                 <Link
-                  to="/features"
+                  to="/boutique"
                   className="py-2 text-base font-medium text-black"
                 >
-                  Features
+                  Store
                 </Link>
                 <Link
-                  to="/solutions"
+                  to="/home"
                   className="py-2 text-base font-medium text-black"
                 >
-                  Solutions
+                  Home
                 </Link>
-                <Link
-                  to="/resources"
-                  className="py-2 text-base font-medium text-black"
+
+                <div
+                  onClick={toggleCart}
+                  className="cursor-pointer flex items-center button-cart"
                 >
-                  Resources
-                </Link>
-                <Link
-                  to="/pricing"
-                  className="py-2 text-base font-medium text-black"
-                >
-                  Pricing
-                </Link>
+                  <span className="text-base font-medium text-white">CART</span>
+                  <FaCartShopping className="iconNavbar"></FaCartShopping>
+                  <span className="text-base font-medium text-white pl-2">
+                    {itemCar}
+                  </span>
+                </div>
               </div>
               <hr className="my-4 border-gray-200" />
               <div className="flex flex-col space-y-2">
                 <Link
-                  to="/signup"
-                  className="py-2 text-base font-medium text-black"
-                >
-                  Sign up
-                </Link>
-                <Link
-                  to="/signin"
+                  to="/login"
                   className="py-2 text-base font-medium text-black"
                 >
                   Sign in
