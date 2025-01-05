@@ -1,7 +1,8 @@
 "use client";
 
 import "./ml-cart.css";
-import { useEffect, useState } from "react";
+import useState from "react-usestateref";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -17,13 +18,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { MdOutlineShoppingCartCheckout } from "react-icons/md";
 
+interface Product {
+  id: string; // Identificador único del producto
+  title: string; // Nombre del producto
+  description: string; // Descripción del producto
+  price: number; // Precio del producto
+  quantity: number; // Cantidad del producto en el carrito
+  srcImage: string; // URL de la imagen del producto
+}
+
 export default function Example() {
   const navigate = useNavigate(); // Hook de React Router para la navegación
   const [count, setCount] = useState(1);
   const { isCartOpen, closeCart, cart } = useCart(); // Usa el contexto para controlar la visibilidad del carrito
   const [currentUser, setCurrentUser] = useState(null); // Estado para el usuario actual
   const [subTotal, setSubTotal] = useState(0);
-  const [productList, setProductList] = useState<
+  const [productList, setProductList, refProductList] = useState<
     {
       id: string;
       desc: string;
@@ -153,26 +163,29 @@ export default function Example() {
     getProductList();
   }, [currentUser]);
 
-  const increment = () => setCount(count + 1);
-  const decrement = () => {
-    if (count > 1) setCount(count - 1);
-  };
-
   const updateQuantity = (id: string, action: "increment" | "decrement") => {
     if (!currentUser) {
       console.error("No hay usuario autenticado" + cart);
       var varTotalSubTotal = 0;
-      cart.map((product: any) => {
-        if (product.id === id) {
-          if (action === "increment") {
-            product.quantity++;
-          } else {
-            product.quantity--;
+
+      setProductList((prev) =>
+        prev.map((producto) => {
+          if (producto.id === id) {
+            if (action === "increment") {
+              producto.quantity++;
+            } else {
+              producto.quantity--;
+            }
+            varTotalSubTotal = producto.quantity * producto.price;
+            setSubTotal(varTotalSubTotal);
+            return producto;
           }
-          varTotalSubTotal = product.quantity * product.price;
-          setSubTotal(varTotalSubTotal);
-        }
-      });
+          return producto;
+        })
+      );
+
+      // Guardar los productos actualizados en localStorage
+      localStorage.setItem("guestCart", JSON.stringify(refProductList.current));
     } else {
       var varTotalSubTotal = 0;
       setProductList((prev) =>
@@ -200,27 +213,23 @@ export default function Example() {
       if (!currentUser) {
         console.error("No hay usuario autenticado");
 
-        // Obtener los productos desde localStorage
-        const storedProducts = JSON.parse(
-          localStorage.getItem("guestCart") || "[]"
+        // Filtrar los productos para excluir el producto con el id especificado
+        const updatedItems = refProductList.current.filter(
+          (product: any) => product.id !== id
         );
-        // Actualizar la lista de productos con los datos del carrito
-        const formattedItems = storedProducts.map((item: any) => ({
-          id: item.id,
-          description: item.description || "",
-          title: item.title || "",
-          price: item.price || 0,
-          quantity: item.quantity || 0,
-          srcImage: item.srcImage || "",
-        }));
 
-        const totalSubTotal = storedProducts.reduce(
+        const totalSubTotal = updatedItems.reduce(
           (sum: any, item: any) => sum + item.price * item.quantity,
           0
         );
         setSubTotal(totalSubTotal);
 
-        setProductList(formattedItems);
+        // Guardar los productos actualizados en localStorage
+        localStorage.setItem(
+          "guestCart",
+          JSON.stringify(updatedItems)
+        );
+        setProductList(updatedItems);
 
         return;
       }

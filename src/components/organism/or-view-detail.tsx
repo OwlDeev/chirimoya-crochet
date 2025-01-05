@@ -41,6 +41,7 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
         setCurrentUser(user); // Guardar el usuario autenticado
       } else {
         setCurrentUser(null); // Usuario no autenticado
+        getProductList();
       }
     });
 
@@ -49,40 +50,83 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
 
   const getProductList = async () => {
     try {
-      if (!currentUser) return; // Salir si no hay usuario autenticado
+      if (!currentUser) {
+        // Obtener los productos desde localStorage
+        const storedProducts = JSON.parse(
+          localStorage.getItem("guestCart") || "[]"
+        );
 
-      const orderRef = doc(db, "orders", orderId || ""); // Referencia al carrito del usuario
+        // Agrupar los productos por ID y sumar sus cantidades
+        const productMap = storedProducts.reduce((acc: any, item: any) => {
+          if (acc[item.id]) {
+            // Si el producto ya existe, sumar la cantidad
+            acc[item.id].quantity += item.quantity;
+          } else {
+            // Si no existe, agregar al mapa
+            acc[item.id] = { ...item };
+          }
+          return acc;
+        }, {});
 
-      // Suscribirse a cambios en tiempo real en el documento del carrito
-      const unsubscribeCart = onSnapshot(orderRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const cartData = docSnap.data();
-          setPersonalDetailData(cartData.personalDetail);
-          setShippingData(cartData.shipping);
-          setStatesData(cartData.states);
-          const items = cartData.items || []; // Asegurarse de que sea un array
+        // Convertir el mapa a un array y formatear los datos
+        const formattedItems = Object.values(productMap).map((item: any) => ({
+          id: String(item.id), // Convertir a string si es necesario
+          desc: item.desc || "", // Valor predeterminado si no existe
+          href: item.href || 0, // Valor predeterminado si no existe
+          description: item.description || "",
+          title: item.title || "",
+          price: item.price || 0,
+          quantity: item.quantity || 0,
+          srcImage: item.srcImage || "",
+        }));
 
-          // Actualizar la lista de productos con los datos del carrito
-          const formattedItems = items.map((item: any) => ({
-            id: item.id,
-            description: item.description || "",
-            title: item.title || "",
-            price: item.price || 0,
-            quantity: item.quantity || 0,
-            srcImage: item.srcImage || "",
-          }));
+        // Calcular el subtotal
+        const totalSubTotal = formattedItems.reduce(
+          (sum: any, item: any) => sum + item.price * item.quantity,
+          0
+        );
 
-          const totalSubTotal = items.reduce(
-            (sum: any, item: any) => sum + item.price * item.quantity,
-            0
-          );
-          setSubTotal(totalSubTotal);
-          setProductList(formattedItems);
-        } else {
-          console.log("No se encontró el carrito para este usuario.");
-          setProductList([]); // Vaciar el carrito si no existe
-        }
-      });
+        // Actualizar el estado
+        setSubTotal(totalSubTotal);
+        setProductList(formattedItems);
+
+        return; // Salir si no hay usuario autenticado
+      } else {
+        // Salir si no hay usuario autenticado
+
+        const orderRef = doc(db, "orders", orderId || ""); // Referencia al carrito del usuario
+
+        // Suscribirse a cambios en tiempo real en el documento del carrito
+        const unsubscribeCart = onSnapshot(orderRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const cartData = docSnap.data();
+            setPersonalDetailData(cartData.personalDetail);
+            setShippingData(cartData.shipping);
+            setStatesData(cartData.states);
+            const items = cartData.items || []; // Asegurarse de que sea un array
+
+            // Actualizar la lista de productos con los datos del carrito
+            const formattedItems = items.map((item: any) => ({
+              id: item.id,
+              description: item.description || "",
+              title: item.title || "",
+              price: item.price || 0,
+              quantity: item.quantity || 0,
+              srcImage: item.srcImage || "",
+            }));
+
+            const totalSubTotal = items.reduce(
+              (sum: any, item: any) => sum + item.price * item.quantity,
+              0
+            );
+            setSubTotal(totalSubTotal);
+            setProductList(formattedItems);
+          } else {
+            console.log("No se encontró el carrito para este usuario.");
+            setProductList([]); // Vaciar el carrito si no existe
+          }
+        });
+      }
     } catch (e) {
       console.log(e);
     }
@@ -256,7 +300,7 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
           onClick={() => cancelOrder(orderId)}
         >
           Cancel Order
-          <MdOutlineCancel className="mt-1 ml-2"/>
+          <MdOutlineCancel className="mt-1 ml-2" />
         </button>
       </div>
     </div>
