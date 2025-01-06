@@ -44,15 +44,43 @@
   padding-top: 1px !important;
 }
 
-.div-button-product-overview{
+.div-button-product-overview {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-form{
+form {
   width: 100% !important;
   padding: 10px !important;
   padding-left: 10px !important;
-    padding-right: 10px !important;
+  padding-right: 10px !important;
+}
+
+@media (max-width: 767px) {
+  .div-price-review {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .div-reviews {
+    margin-top: 5px !important;
+  }
+
+  .form-product-overview {
+    display: none;
+  }
+
+  .div-details{
+    display: none;
+  }
+  
+}
+
+@media (min-width: 1024px) {
+  .form-product-overview-mobile {
+    display: none;
+  }
 }

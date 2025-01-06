@@ -95,10 +95,7 @@ const Stepper = () => {
 
         // Actualizar el estado
         setSubTotal(totalSubTotal);
-        localStorage.setItem(
-          "guestTotal",
-          JSON.stringify(totalSubTotal)
-        );
+        localStorage.setItem("guestTotal", JSON.stringify(totalSubTotal));
         setProductList(formattedItems);
 
         return; // Salir si no hay usuario autenticado
@@ -146,7 +143,9 @@ const Stepper = () => {
 
   const createOrderInvited = async () => {
     const cart = JSON.parse(localStorage.getItem("guestCart") || "[]");
-    const personalDetail = JSON.parse(localStorage.getItem("guestPersonalDetail") || "[]");
+    const personalDetail = JSON.parse(
+      localStorage.getItem("guestPersonalDetail") || "[]"
+    );
     const shipping = JSON.parse(localStorage.getItem("guestShipping") || "[]");
     const total = JSON.parse(localStorage.getItem("guestTotal") || "[]");
 
@@ -238,10 +237,7 @@ const Stepper = () => {
 
       //limpia variables
       setSubTotal(0);
-      localStorage.setItem(
-        "guestTotal",
-        JSON.stringify(0)
-      );
+      localStorage.setItem("guestTotal", JSON.stringify(0));
     } catch (error) {
       console.error("Error al crear el pedido o eliminar el carrito:", error);
     }
@@ -274,10 +270,7 @@ const Stepper = () => {
           0
         );
         setSubTotal(totalSubTotal);
-        localStorage.setItem(
-          "guestTotal",
-          JSON.stringify(totalSubTotal)
-        );
+        localStorage.setItem("guestTotal", JSON.stringify(totalSubTotal));
 
         // Guardar los productos actualizados en localStorage
         localStorage.setItem("guestCart", JSON.stringify(updatedItems));
@@ -307,10 +300,10 @@ const Stepper = () => {
 
   return (
     <div className=" flex flex-col h-full w-full">
-      <div className="flex items-start div-main-progress-bar pt-10 pl-48">
+      {/* <div className="flex items-start div-main-progress-bar pt-10 pl-48">
         {steps.map((step, index) => (
           <div className="flex w-full h-fullborder" key={step.id}>
-            {/* Step */}
+            
             <div className="flex items-start">
               <div
                 className={`flex items-center justify-center w-10 h-10 rounded-full ${
@@ -350,10 +343,67 @@ const Stepper = () => {
                 {step.label}
               </span>
             </div>
-            {/* Connector */}
+           
             {index < steps.length - 1 && (
               <div
                 className={`mt-5 flex-auto border-t-2 mx-4 ${
+                  step.id < currentStep
+                    ? "color-text-primary"
+                    : "border-gray-300"
+                }`}
+              ></div>
+            )}
+          </div>
+        ))}
+      </div> */}
+
+      <div className="steps-container">
+        {steps.map((step, index) => (
+          <div key={step.id} className={`step-item ${step.id === currentStep ? 'active' : ''}`}>
+            {/* Step */}
+            <div className={`flex items-start`}>
+              <div
+                className={`flex items-center justify-center w-10 h-10 rounded-full ${
+                  step.id < currentStep
+                    ? "option-one-step"
+                    : step.id === currentStep
+                    ? "border-2 option-two-step"
+                    : "border-2 option-tree-step"
+                }`}
+              >
+                {step.id < currentStep ? (
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    ></path>
+                  </svg>
+                ) : (
+                  step.id
+                )}
+              </div>
+              <span
+                className={`ml-2 ${
+                  step.id <= currentStep
+                    ? "color-text-primary font-medium"
+                    : "color-text-primary"
+                }`}
+              >
+                {step.label}
+              </span>
+            </div>
+            {/* Connector */}
+            {index < steps.length - 1 && (
+              <div
+                className={`step-connector ${
                   step.id < currentStep
                     ? "color-text-primary"
                     : "border-gray-300"

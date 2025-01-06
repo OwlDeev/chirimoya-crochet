@@ -33,7 +33,7 @@ function AppContent() {
     <div className="flex flex-col min-h-screen">
       <MlNavbar />
       {isCartOpen && <MlCart />}
-      <div className="flex-grow">
+      <div className="flex-grow mt-16">
         <Routes>
           <Route
             path="/"

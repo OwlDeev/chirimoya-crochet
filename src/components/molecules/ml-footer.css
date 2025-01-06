@@ -25,3 +25,11 @@
     color: white;
     font-size: 20px;
 }
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+    .textRsFooterDer {
+        font-size: 10px;
+    }
+
+  }

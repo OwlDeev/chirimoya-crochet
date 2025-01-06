@@ -37,6 +37,12 @@ export default function MlProductOverview({
   price,
   idProduct = "",
 }: MlProductOverviewProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   const { addToCartInvited } = useCart();
 
   const onAddItemCart = async () => {
@@ -65,7 +71,7 @@ export default function MlProductOverview({
             timer: 1500,
           });
 
-          addToCartInvited()
+          addToCartInvited();
           return;
         }
       }
@@ -146,39 +152,40 @@ export default function MlProductOverview({
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-gray-900">
-              {price + "€"}
-            </p>
+            <div className="div-price-review">
+              <p className="text-3xl tracking-tight text-gray-900">
+                {price + "€"}
+              </p>
 
-            {/* Reviews */}
-            <div className="mt-6">
-              <h3 className="sr-only">Reviews</h3>
-              <div className="flex items-center">
+              {/* Reviews */}
+              <div className="mt-6 div-reviews">
+                <h3 className="sr-only">Reviews</h3>
                 <div className="flex items-center">
-                  {[0, 1, 2, 3, 4].map((rating) => (
-                    <StarIcon
-                      key={rating}
-                      aria-hidden="true"
-                      className={classNames(
-                        reviews.average > rating
-                          ? "text-gray-900"
-                          : "text-gray-200",
-                        "size-5 shrink-0"
-                      )}
-                    />
-                  ))}
+                  <div className="flex items-center">
+                    {[0, 1, 2, 3, 4].map((rating) => (
+                      <StarIcon
+                        key={rating}
+                        aria-hidden="true"
+                        className={classNames(
+                          reviews.average > rating
+                            ? "text-gray-900"
+                            : "text-gray-200",
+                          "size-5 shrink-0"
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <p className="sr-only">{reviews.average} out of 5 stars</p>
+                  <a
+                    href={reviews.href}
+                    className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                  >
+                    {reviews.totalCount} reviews
+                  </a>
                 </div>
-                <p className="sr-only">{reviews.average} out of 5 stars</p>
-                <a
-                  href={reviews.href}
-                  className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  {reviews.totalCount} reviews
-                </a>
               </div>
             </div>
-
-            <form>
+            <form className="form-product-overview">
               <div className="div-button-product-overview">
                 <button
                   type="button"
@@ -201,7 +208,6 @@ export default function MlProductOverview({
           </div>
 
           <div className="div-main-card-module py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-            {/* Description and details */}
             <div className="div-main-card-module-izq">
               <h3 className="sr-only">Description</h3>
 
@@ -228,15 +234,39 @@ export default function MlProductOverview({
                 </div>
               </div>
 
-              <div className="mt-10">
+              <div className="mt-10 div-details">
                 <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
                 <div className="mt-4 space-y-6">
-                  <p className="text-sm text-gray-600">{imageAlt}</p>
+                  <div>
+                    <p className="text-sm text-gray-600">{imageAlt}</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Description and details */}
+          <form className="form-product-overview-mobile">
+            <div className="div-button-product-overview">
+              <button
+                type="button"
+                className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={onAddItemCart}
+              >
+                Add to car
+                <FaCartPlus className="iconNavbar" />
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="mt-2 flex w-full items-center justify-center rounded-md border border-indigo-600 bg-white px-8 py-3 text-base font-medium text-indigo-600 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Continue shopping
+                <IoMdArrowRoundBack className="iconNavbarContinue" />
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

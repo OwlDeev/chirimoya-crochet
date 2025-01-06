@@ -1,30 +1,75 @@
 .option-one-step {
-    background-color: #ffb8b7;
-    color: white;
-  }
-  
-  .option-two-step {
-    color: #ffb8b7;
-    border-color: #ffb8b7;
+  background-color: #ffb8b7;
+  color: white;
+}
+
+.option-two-step {
+  color: #ffb8b7;
+  border-color: #ffb8b7;
+}
+
+.option-tree-step {
+  color: #4caf4fc2;
+  border-color: #4caf4f75;
+}
+
+.color-text-primary {
+  color: #4caf4fc2;
+}
+
+.color-button {
+  background-color: #ffb8b7;
+  color: white;
+}
+
+.color-button:hover {
+  background-color: #ffe4e3 !important;
+  color: white !important;
+}
+
+.step-item {
+  flex: 1 1 100%; /* Asegura que cada paso ocupe el 100% del ancho en pantallas pequeñas */
+  max-width: 100%; /* Asegura que los pasos no se desborden */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem; /* Espacio entre los pasos */
+}
+
+.step-connector {
+  flex: 1 1 auto;
+  border-top: 2px solid;
+  margin: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .step-item {
+    flex: 1 1 auto; /* Permite que los pasos ocupen el espacio disponible en pantallas más grandes */
+    max-width: none;
   }
 
-  .option-tree-step {
-    color: #4caf4fc2;
-    border-color: #4caf4f75;
+  .steps-container {
+    display: flex;
+    flex-direction: row !important; /* Asegura que los pasos se muestren en una sola fila */
+    justify-content: center !important; /* Centra los elementos horizontalmente */
+  }
+}
+
+/* Estilo para ocultar los pasos no activos en dispositivos móviles */
+@media (max-width: 767px) {
+  .step-item {
+    display: none; /* Oculta todos los pasos */
   }
 
-  .color-text-primary{
-    color: #4caf4fc2;
+  .step-item.active {
+    display: flex; /* Muestra solo el paso activo */
   }
 
-  .color-button{
-    background-color: #ffb8b7;
-    color: white;
+  .step-connector {
+    display: none; /* Oculta el step-connector */
   }
 
-  .color-button :hover{
-    background-color: #ffe4e3 !important;
-    color: white  !important;
+  .steps-container{
+    margin-top: 20px !important;
   }
-  
-  
+}

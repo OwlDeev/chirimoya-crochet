@@ -52,5 +52,10 @@
   .button-cart-hero {
     left: 50%;
     transform: translateX(-50%);
+    bottom: -80px;
+  }
+
+  .div-main {
+    height: auto; /* Ajusta la altura automáticamente en dispositivos móviles */
   }
 }

@@ -143,7 +143,7 @@ const MlNavbar = () => {
 
   return (
     <div className="flex w-full">
-      <header>
+      <header className="navbar-fixed">
         {/* <!-- lg+ (Escritorio) --> */}
         <div className="bg-white border-b border-gray-200">
           <div className="px-4 mx-auto sm:px-6 lg:px-8">
@@ -203,8 +203,19 @@ const MlNavbar = () => {
                 </div>
               </div>
 
-              {/* Ícono de hamburguesa para móvil */}
               <div className="lg:hidden flex items-center">
+                {/* Ícono de carrito para móvil */}
+                <div
+                  onClick={toggleCart}
+                  className="cursor-pointer flex items-center button-cart-mobile"
+                >
+                  <FaCartShopping className="iconNavbar"></FaCartShopping>
+                  <span className="text-base font-medium iconNavbar pl-2">
+                    {itemCar}
+                  </span>
+                </div>
+
+                {/* Ícono de hamburguesa para móvil */}
                 <div className="hamburger-icon" onClick={toggleMenu}>
                   <div></div>
                   <div></div>
