@@ -1,35 +1,132 @@
-form{
-    width: 100%;
-    height: 100%;
-    padding-left: 200px;
-    padding-right: 200px;
-    padding-bottom: 50px;
-    padding-top: 50px;
+.div-login-main-profile {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
-.div-basic-information{
+.div-login-main-profile form {
+  width: 100%;
+  height: 100%;
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-bottom: 50px;
+  padding-top: 50px;
+}
+
+.div-login-main-profile .div-basic-information {
+  border: 1px;
+  border-color: #ffb8b7;
+  box-shadow: #ffb8b7 20px 20px 20px;
+  border-style: solid;
+  border-radius: 20px;
+}
+
+.react-tel-input .form-control {
+  width: 100% !important;
+}
+
+.color-button {
+  background-color: #ffb8b7;
+  color: white;
+}
+
+.color-button :hover {
+  background-color: #ffe4e3 !important;
+  color: white !important;
+}
+
+.color-button-delete {
+  background-color: #f80400;
+  color: white;
+}
+
+.table-th{
+  text-align: start;
+  padding: 1rem;
+}
+
+.table-th-hidden{
+  text-align: start;
+  padding: 1rem;
+}
+
+.table-td{
+  padding-left: 1rem;
+}
+
+.table-td-hidden{
+  padding-left: 1rem;
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 767px) {
+  .div-login-main-profile {
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+
+  .div-login-main-profile form {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .div-login-main-profile .div-basic-information {
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+  }
+
+  .div-login-main-profile {
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+  .table-th{
+    padding: 1rem;
+  }
+
+  .table-th-hidden{
+    display: none;
+  }
+
+  .table-td-hidden{
+    display: none;
+  }
+
+  .table-td{
+    padding-left: 1rem;
+  }
+
+  .div-base-information{
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem /* 20px */;
+    padding-right: 1rem /* 20px */;
+    padding-top: 1rem /* 12px */;
+    padding-bottom: 1rem /* 12px */;
+    margin: 0px !important;
     border: 1px;
     border-color: #ffb8b7;
-    box-shadow: #ffb8b7 20px 20px 20px;
+    box-shadow: #ffb8b7 10px 10px 10px;
     border-style: solid;
     border-radius: 20px;
+  }
+
+  .div-login-main-profile .div-basic-information {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem /* 20px */;
+    padding-right: 1rem /* 20px */;
+    padding-top: 1rem /* 12px */;
+    padding-bottom: 1rem /* 12px */;
+
+    border: 1px;
+    border-color: #ffb8b7;
+    box-shadow: #ffb8b7 10px 10px 10px;
+    border-style: solid;
+    border-radius: 20px;
+  }
 }
-
-.react-tel-input .form-control{
-    width: 100% !important;
-}
-
-.color-button{
-    background-color: #ffb8b7;
-    color: white;
-  }
-
-  .color-button :hover{
-    background-color: #ffe4e3 !important;
-    color: white  !important;
-  }
-  
-  .color-button-delete{
-    background-color: #f80400;
-    color: white;
-  }

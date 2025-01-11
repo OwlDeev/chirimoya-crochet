@@ -212,218 +212,202 @@ export default function MlProfile({ EmailAddress = "" }: MlProfile) {
   };
 
   return (
-    <form>
-      <div className="space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
-          <h2 className="ml-8 text-base/7 font-semibold text-gray-900">
-            Profile
-          </h2>
-          <div className="grid grid-cols-2 gap-1 p-4">
-            {/* Columna Izquierda: Información básica */}
-            <div className="h-full w-full div-basic-information">
-              <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
-                <label
-                  htmlFor="username"
-                  className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
-                >
-                  Fullname
-                </label>
-                <div className="pl-4 h-full w-full">
-                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                    <input
-                      id="username"
-                      name="username"
-                      type="text"
-                      autoComplete="username"
-                      className="h-full w-full pb-0 block flex border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
-                      value={fullname || ""}
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
-                <label
-                  htmlFor="username"
-                  className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
-                >
-                  Email Address
-                </label>
-                <div className="pl-4 h-full w-full">
-                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-500 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                    <input
-                      disabled
-                      id="username"
-                      name="username"
-                      type="email"
-                      placeholder="janesmith@gmail.com"
-                      autoComplete="email"
-                      className="h-full w-full pb-0 block flex border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
-                      defaultValue={EmailAddress || ""}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
-                <label
-                  htmlFor="username"
-                  className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
-                >
-                  Password
-                </label>
-                <div className="pl-4 h-full w-full">
-                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                    <input
-                      value={newPassword}
-                      placeholder="Enter new password"
-                      onChange={(e) => setPassword(e.target.value)}
-                      type="password"
-                      className="h-full w-full pb-0 block flex border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
-                <label
-                  htmlFor="username"
-                  className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
-                >
-                  Phone
-                </label>
-                <div className="pl-4 h-full w-full">
-                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                    <PhoneInput
-                      country={"us"} // País predeterminado
-                      value={phone}
-                      onChange={(e) => setPhone(e)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Columna Derecha: Espacio adicional o información complementaria */}
-            <div className="p-4 flex justify-center align-middle items-center">
-              <div className="flex flex-col">
-                <div className="mt-2 flex gap-x-3 flex-col">
-                  <UserCircleIcon
-                    aria-hidden="true"
-                    className="size-40 text-gray-300"
-                  />
-                  <button
-                    type="button"
-                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                  >
-                    Change
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Order List */}
-          <div className="flex w-full h-full p-4 flex-col ">
-            <h2 className="m-4 text-base/7 font-semibold text-gray-900">
-              Order List
+    <div className="div-login-main-profile">
+      <form>
+        <div className="space-y-12">
+          <div className="border-b border-gray-900/10 pb-12">
+            <h2 className="ml-8 text-base/7 font-semibold text-gray-900">
+              Profile
             </h2>
-            <div className="div-basic-information flex w-full h-full flex-col">
-              <table className="table-auto w-full h-full ">
-                <thead>
-                  <tr>
-                    <th className="text-start p-4">Number Order</th>
-                    <th className="text-start p-4">State</th>
-                    <th className="text-start p-4">Review</th>
-                    <th className="text-start p-4">Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderList.map((order) => (
+            <div className="grid grid-cols-1 gap-1 p-4">
+              {/* Columna Izquierda: Información básica */}
+              <div className="h-full w-full div-basic-information">
+                <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
+                  <label
+                    htmlFor="username"
+                    className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
+                  >
+                    Fullname
+                  </label>
+                  <div className="pl-4 h-full w-full">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                      <input
+                        id="username"
+                        name="username"
+                        type="text"
+                        autoComplete="username"
+                        className="h-full w-full pb-0 block flex border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
+                        value={fullname || ""}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
+                  <label
+                    htmlFor="username"
+                    className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
+                  >
+                    Email Address
+                  </label>
+                  <div className="pl-4 h-full w-full">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-500 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                      <input
+                        disabled
+                        id="username"
+                        name="username"
+                        type="email"
+                        placeholder="janesmith@gmail.com"
+                        autoComplete="email"
+                        className="h-full w-full pb-0 block flex border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
+                        defaultValue={EmailAddress || ""}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
+                  <label
+                    htmlFor="username"
+                    className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
+                  >
+                    Password
+                  </label>
+                  <div className="pl-4 h-full w-full">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                      <input
+                        value={newPassword}
+                        placeholder="Enter new password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        type="password"
+                        className="h-full w-full pb-0 block flex border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
+                  <label
+                    htmlFor="username"
+                    className="pb-0 flex flex-col-reverse text-sm/6 font-medium text-gray-900"
+                  >
+                    Phone
+                  </label>
+                  <div className="pl-4 h-full w-full">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                      <PhoneInput
+                        country={"us"} // País predeterminado
+                        value={phone}
+                        onChange={(e) => setPhone(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Order List */}
+            <div className="flex w-full h-full p-4 flex-col ">
+              <h2 className="m-4 text-base/7 font-semibold text-gray-900">
+                Order List
+              </h2>
+              <div className="div-base-information">
+                <table className="table-auto w-full h-full ">
+                  <thead>
                     <tr>
-                      <td className="pl-4">{order.id}</td>
-                      <td className="pl-4">{order.lastStatus["state"]}</td>
-                      <td className="pl-4">
-                        <Link
-                          to="/detail-order"
-                          state={{ orderId: order.id }}
-                          className="px-6 text-base font-medium cursor-pointer flex flex-row color-button rounded-md border border-transparent w-3/4"
-                        >
-                          <div>
-                            <p>View Detail</p>
-                          </div>
-                          <div className="pt-1 pl-4 align-middle">
-                            <BiSolidDetail />
-                          </div>
-                        </Link>
-                      </td>
-                      <td className="cursor-pointer p-4">
-                        <FaRegTrashCan
-                          onClick={() => onClickDeleteOrder(order.id)}
-                        ></FaRegTrashCan>
-                      </td>
+                      <th className="table-th">Number Order</th>
+                      <th className="table-th-hidden">State</th>
+                      <th className="table-th">Review</th>
+                      <th className="table-th-hidden">Delete</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {orderList.map((order) => (
+                      <tr>
+                        <td className="table-td">{order.id}</td>
+                        <td className="table-td-hidden">{order.lastStatus["state"]}</td>
+                        <td className="table-td">
+                          <Link
+                            to="/detail-order"
+                            state={{ orderId: order.id }}
+                            className="px-2 text-base font-medium cursor-pointer flex flex-row color-button rounded-md border border-transparent w-full"
+                          >
+                            <div>
+                              <p>View Detail</p>
+                            </div>
+                            <div className="pt-1 pl-4 align-middle">
+                              <BiSolidDetail />
+                            </div>
+                          </Link>
+                        </td>
+                        <td className="cursor-pointer table-td-hidden">
+                          <FaRegTrashCan
+                            onClick={() => onClickDeleteOrder(order.id)}
+                          ></FaRegTrashCan>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-6 flex items-center justify-between gap-x-6 p-4">
-        <button
-          type="button"
-          className={`rounded-md color-button px-3 py-2 text-sm font-semibold text-white shadow-sm flex flex-row`}
-          onClick={logOut}
-        >
-          Sign Out
-          <div className="pt-1 pl-4 align-middle">
-            <FaSignOutAlt />
-          </div>
-        </button>
-        <button
-          type="button"
-          className={`flex flex-row rounded-md color-button px-3 py-2 text-sm font-semibold text-white shadow-sm ${
-            loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-200"
-          }`}
-          onClick={onUpdateProfile}
-          disabled={loading} // Deshabilitar el botón si está cargando
-        >
-          {loading ? (
-            <div className="flex items-center">
-              <svg
-                className="animate-spin h-5 w-5 mr-3 text-white"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C6.477 0 0 6.477 0 12h4z"
-                ></path>
-              </svg>
-              Processing...
+        <div className="mt-6 flex items-center justify-between gap-x-6 p-4">
+          <button
+            type="button"
+            className={`rounded-md color-button px-3 py-2 text-sm font-semibold text-white shadow-sm flex flex-row`}
+            onClick={logOut}
+          >
+            Sign Out
+            <div className="pt-1 pl-4 align-middle">
+              <FaSignOutAlt />
             </div>
-          ) : (
-            <div className="flex flex-row">
-              <p>Save</p>
-              <div className="pt-1 pl-4 align-middle">
-              <FaSave />
+          </button>
+          <button
+            type="button"
+            className={`flex flex-row rounded-md color-button px-3 py-2 text-sm font-semibold text-white shadow-sm ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-200"
+            }`}
+            onClick={onUpdateProfile}
+            disabled={loading} // Deshabilitar el botón si está cargando
+          >
+            {loading ? (
+              <div className="flex items-center">
+                <svg
+                  className="animate-spin h-5 w-5 mr-3 text-white"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C6.477 0 0 6.477 0 12h4z"
+                  ></path>
+                </svg>
+                Processing...
               </div>
-            </div>
-          )}
-        </button>
-      </div>
-    </form>
+            ) : (
+              <div className="flex flex-row">
+                <p>Save</p>
+                <div className="pt-1 pl-4 align-middle">
+                  <FaSave />
+                </div>
+              </div>
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

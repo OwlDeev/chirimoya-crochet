@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import useState from "react-usestateref";
 import { Link } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import "./ml-navbar.css";
@@ -18,11 +19,12 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 
 const MlNavbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen, refMenuOpen] = useState(false);
   const { toggleCart, productCount } = useCart(); // Usa el contexto para controlar el carrito
   const [itemCar, setItemCar] = useState(0);
   const [currentUser, setCurrentUser] = useState(null); // Estado para guardar el usuario actual
   const [nameUser, setNameUser] = useState("");
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Escuchar cambios en el estado de autenticación del usuario
@@ -110,6 +112,24 @@ const MlNavbar = () => {
     fetchCartItems();
   }, [currentUser]); // Solo se ejecuta al montar el componente
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -141,8 +161,17 @@ const MlNavbar = () => {
     }
   };
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  const openCartAndCloseMenu = () => {
+    setMenuOpen(false);
+    toggleCart();
+  };
+
   return (
-    <div className="flex w-full">
+    <div className="flex w-full" ref={menuRef}>
       <header className="navbar-fixed">
         {/* <!-- lg+ (Escritorio) --> */}
         <div className="bg-white border-b border-gray-200">
@@ -153,14 +182,16 @@ const MlNavbar = () => {
                 <Link
                   to="/login"
                   className="whitespace-nowrap text-base font-medium text-white cursor-pointer items-center button-cart"
+                  onClick={closeMenu}
                 >
-                  {currentUser ? nameUser : "LOGIN"}
+                  {currentUser ? "Profile" : "LOGIN"}
                   <FaUser className="iconNavbar" />
                 </Link>
 
                 <Link
                   to="/home"
                   className="h-full w-full text-base font-medium text-white cursor-pointer items-center button-cart"
+                  onClick={closeMenu}
                 >
                   HOME
                   <FaHouse className="iconNavbar" />
@@ -170,7 +201,7 @@ const MlNavbar = () => {
               {/* Logo */}
               <div className="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
                 <div className="flex-shrink-0">
-                  <Link to="/home" className="flex">
+                  <Link to="/home" className="flex" onClick={closeMenu}>
                     <img
                       className="imagenLogo"
                       src={`${process.env.PUBLIC_URL}/assets/imgs/logo2.png`}
@@ -185,6 +216,7 @@ const MlNavbar = () => {
                 <Link
                   to="/boutique"
                   className="text-base font-medium text-white cursor-pointer items-center button-cart"
+                  onClick={closeMenu}
                 >
                   STORE
                   <FaStore className="iconNavbar" />
@@ -206,7 +238,7 @@ const MlNavbar = () => {
               <div className="lg:hidden flex items-center">
                 {/* Ícono de carrito para móvil */}
                 <div
-                  onClick={toggleCart}
+                  onClick={() => openCartAndCloseMenu()}
                   className="cursor-pointer flex items-center button-cart-mobile"
                 >
                   <FaCartShopping className="iconNavbar"></FaCartShopping>
@@ -227,25 +259,27 @@ const MlNavbar = () => {
         </div>
 
         {/* Menú móvil desplegable */}
-        {menuOpen && (
-          <div className="bg-white lg:hidden">
+        {refMenuOpen.current && (
+          <div className="lg:hidden div-menu-mobile-navbar">
             <nav className="px-4 py-4 mx-auto sm:px-6 lg:px-8">
               <div className="flex flex-col space-y-2">
                 <Link
                   to="/boutique"
                   className="py-2 text-base font-medium text-black"
+                  onClick={closeMenu}
                 >
                   Store
                 </Link>
                 <Link
                   to="/home"
                   className="py-2 text-base font-medium text-black"
+                  onClick={closeMenu}
                 >
                   Home
                 </Link>
 
                 <div
-                  onClick={toggleCart}
+                  onClick={toggleMenu}
                   className="cursor-pointer flex items-center button-cart"
                 >
                   <span className="text-base font-medium text-white">CART</span>
@@ -260,8 +294,9 @@ const MlNavbar = () => {
                 <Link
                   to="/login"
                   className="py-2 text-base font-medium text-black"
+                  onClick={closeMenu}
                 >
-                  Sign in
+                  {currentUser ? "Profile" : "Login"}
                 </Link>
               </div>
             </nav>

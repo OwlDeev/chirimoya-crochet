@@ -42,7 +42,25 @@
   margin: 0 1rem;
 }
 
+/* Desktop */
 @media (min-width: 768px) {
+  .div-buttons-buy {
+    display: flex; /* flex */
+    flex-direction: row; /* flex-row */
+    height: 100%; /* h-full */
+    width: 100%; /* w-full */
+    justify-content: space-between; /* justify-between */
+    padding: 5rem; /* p-20 (equivale a 20 * 0.25rem = 5rem) */
+  }
+
+  .div-main-buy {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding-top: 50px !important;
+  }
+
   .step-item {
     flex: 1 1 auto; /* Permite que los pasos ocupen el espacio disponible en pantallas más grandes */
     max-width: none;
@@ -52,11 +70,25 @@
     display: flex;
     flex-direction: row !important; /* Asegura que los pasos se muestren en una sola fila */
     justify-content: center !important; /* Centra los elementos horizontalmente */
+    padding-left: 80px;
   }
 }
 
-/* Estilo para ocultar los pasos no activos en dispositivos móviles */
+/* Mobile*/
 @media (max-width: 767px) {
+  .div-buttons-buy {
+    display: flex; /* flex */
+    flex-direction: row; /* flex-row */
+    height: 100%; /* h-full */
+    width: 100%; /* w-full */
+    justify-content: space-between; /* justify-between */
+    padding: 1rem; 
+  }
+
+  .div-main-buy {
+    padding-top: 0px !important;
+  }
+
   .step-item {
     display: none; /* Oculta todos los pasos */
   }
@@ -69,7 +101,8 @@
     display: none; /* Oculta el step-connector */
   }
 
-  .steps-container{
+  .steps-container {
     margin-top: 20px !important;
+    padding-left: 0px !important;
   }
 }

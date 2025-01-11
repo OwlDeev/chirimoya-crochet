@@ -27,7 +27,7 @@ const Stepper = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [personalDetailData, setPersonalDetailData] = useState({});
   const [shippingData, setShippingData] = useState({});
-  const [subTotal, setSubTotal] = useState(0);
+  const [subTotal, setSubTotal, refSubTotal] = useState(0);
   const [currentUser, setCurrentUser] = useState(null); // Estado para el usuario actual
   const [productList, setProductList, refProductList] = useState<
     {
@@ -214,7 +214,7 @@ const Stepper = () => {
       };
 
       // Crear un nuevo pedido
-      const orderRef = doc(db, "orders", `${uid}-${Date.now()}`); // ID único
+      const orderRef = doc(db, "orders", `${Date.now()}`); // ID único
       await setDoc(orderRef, {
         userId: uid,
         items: cartData.items,
@@ -290,16 +290,17 @@ const Stepper = () => {
       });
 
       // Actualizar la lista de productos en el estado
-      setProductList(updatedItems);
-
-      navigate("/boutique"); // Redirige al usuario a la página de login
+      if(refSubTotal.current === 0){
+        navigate("/boutique"); // Redirige al usuario a la página de login
+      }
+      
     } catch (error) {
       console.error("Error al eliminar el producto del carrito:", error);
     }
   };
 
   return (
-    <div className=" flex flex-col h-full w-full">
+    <div className="div-main-buy">
       {/* <div className="flex items-start div-main-progress-bar pt-10 pl-48">
         {steps.map((step, index) => (
           <div className="flex w-full h-fullborder" key={step.id}>
@@ -486,7 +487,7 @@ const Stepper = () => {
 
       {/* Botones */}
       {currentStep !== 4 ? (
-        <div className="flex flex-row h-full w-full justify-between p-20">
+        <div className="div-buttons-buy flex flex-row h-full w-full justify-between p-20">
           <div className="flex flex-row h-full w-full">
             {currentStep === 1 ? (
               <Link

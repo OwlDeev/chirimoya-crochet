@@ -1,7 +1,7 @@
 {
   "name": "chirimoya-crochet",
-  "description": "Version 2.4, contruction of the view in mobile version",
-  "version": "0.2.4",
+  "description": "Version 2.7, Change in the version mobile, navbar detail",
+  "version": "0.2.7",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^2.2.0",

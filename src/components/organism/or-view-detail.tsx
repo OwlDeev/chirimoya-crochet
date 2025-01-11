@@ -173,7 +173,7 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 containerMovil">
       <div className="pl-20 pr-20 pt-20 border-b border-gray-900/10 pb-12">
         <ul role="list" className="-my-6 divide-y divide-gray-200">
           {productList.map((product: any, index: any) => (
@@ -205,7 +205,7 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
         <div className="flex flex-row-reverse">{"Subtotal: " + subTotal}</div>
       </div>
 
-      <div className="div-basic-information pl-5 pr-5 pt-5 border-b border-gray-900/10 pb-5 m-10">
+      <div className="div-base-information border-b border-gray-900/10">
         <table className="table-auto w-full rounded">
           <thead>
             <tr>
@@ -219,22 +219,22 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
           </thead>
           <tbody>
             <tr>
-              <td className="p-2">{shippingData && shippingData["address"]}</td>
-              <td className="p-2">
+              <td data-label="Address" className="p-2">{shippingData && shippingData["address"]}</td>
+              <td data-label="Apartment" className="p-2">
                 {shippingData && shippingData["apartment"]}
               </td>
-              <td className="p-2">{shippingData && shippingData["city"]}</td>
-              <td className="p-2">{shippingData && shippingData["country"]}</td>
-              <td className="p-2">{shippingData && shippingData["phone"]}</td>
-              <td className="p-2">
+              <td data-label="City" className="p-2">{shippingData && shippingData["city"]}</td>
+              <td data-label="Country" className="p-2">{shippingData && shippingData["country"]}</td>
+              <td data-label="Phone" className="p-2">{shippingData && shippingData["phone"]}</td>
+              <td data-label="Postal Code" className="p-2">
                 {shippingData && shippingData["postalCode"]}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div className="flex flex-row w-full">
-        <div className="div-basic-information pl-5 pr-5 pt-5 border-b border-gray-900/10 pb-5 m-10 w-full">
+      <div className="div-email-state">
+        <div className="div-base-information border-b border-gray-900/10">
           <table className="table-auto w-full">
             <thead>
               <tr>
@@ -245,13 +245,13 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
             </thead>
             <tbody>
               <tr>
-                <td className="p-2">
+                <td data-label="Email" className="p-2">
                   {personalDetailData && personalDetailData["email"]}
                 </td>
-                <td className="p-2">
+                <td data-label="Name" className="p-2">
                   {personalDetailData && personalDetailData["name"]}
                 </td>
-                <td className="p-2">
+                <td data-label="Surname" className="p-2">
                   {personalDetailData && personalDetailData["surname"]}
                 </td>
               </tr>
@@ -259,7 +259,7 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
           </table>
         </div>
         {/* State */}
-        <div className="flex flex-col div-basic-information pl-5 pr-5 pt-5 border-b border-gray-900/10 pb-5 m-10 w-full">
+        <div className="div-base-information border-b border-gray-900/10">
           <table className="table-auto w-full">
             <thead>
               <tr>
@@ -273,9 +273,9 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
                 statesData.length > 0 &&
                 statesData.map((value: any) => (
                   <tr key={value.state}>
-                    <td className="text-start p-2">{value.state}</td>
-                    <td className="text-start p-2">{value.date}</td>
-                    <td className="text-start p-2">
+                    <td data-label="State" className="text-start p-2">{value.state}</td>
+                    <td data-label="Date" className="text-start p-2">{value.date}</td>
+                    <td data-label="Info" className="text-start p-2">
                       <BsInfoSquare />
                     </td>
                   </tr>
@@ -284,7 +284,7 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
           </table>
         </div>
       </div>
-      <div className="pl-20 pr-20 mt-6 mb-6 flex items-center justify-between gap-x-6">
+      <div className="div-buttons-main">
         <button
           type="button"
           className={`color-button rounded-md px-3 py-2 text-sm font-semibold shadow-sm flex flex-row`}

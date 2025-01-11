@@ -9,4 +9,103 @@
   box-shadow: #ffb8b7 20px 20px 20px;
   border-style: solid;
   border-radius: 20px;
+  width: max-content;
+}
+
+.containerMovil {
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.div-email-state{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.div-buttons-main {
+  padding-left: 20px; /* pl-20 */
+  padding-right: 20px; /* pr-20 */
+  margin-top: 6px; /* mt-6 */
+  margin-bottom: 6px; /* mb-6 */
+  display: flex; /* flex */
+  align-items: center; /* items-center */
+  justify-content: space-between; /* justify-between */
+  gap: 6px; /* gap-x-6 */
+}
+
+/* media query para celular */
+@media (max-width: 767px) {
+  .containerMovil .table-auto {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+  }
+
+  .div-email-state{
+    flex-direction: column;
+  }
+
+  .div-base-information{
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem /* 20px */;
+    padding-right: 1rem /* 20px */;
+    padding-top: 1rem /* 12px */;
+    padding-bottom: 1rem /* 12px */;
+    margin: 1rem /* 40px */;
+
+    border: 1px;
+    border-color: #ffb8b7;
+    box-shadow: #ffb8b7 10px 10px 10px;
+    border-style: solid;
+    border-radius: 20px;
+  }
+
+  .div-buttons-main {
+    padding-left: 20px !important; /* pl-20 */
+    padding-right: 20px; /* pr-20 */
+    padding-top: 30px; /* mt-6 */
+    margin-bottom: 30px; /* mb-6 */
+    display: flex; /* flex */
+    align-items: center; /* items-center */
+    justify-content: space-between; /* justify-between */
+    width: 100%;
+  }
+
+  .containerMovil ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    overflow-x: auto;
+  }
+
+  .containerMovil .table-auto thead {
+    display: none;
+  }
+
+  .table-auto tbody {
+    width: 100%;
+  }
+
+  .containerMovil .table-auto tr {
+    display: block;
+    margin-bottom: 10px; /* Separación entre "tarjetas" */
+  }
+
+  .containerMovil .table-auto td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+
+  .containerMovil .table-auto td::before {
+    content: attr(data-label); /* Agrega el encabezado como etiqueta */
+    font-weight: bold;
+    flex-basis: 50%;
+    text-align: left;
+  }
 }

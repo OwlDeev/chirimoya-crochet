@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-import "./ml-profile.css";
+import "./ml-login.css";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -54,7 +54,7 @@ const MlLogin: React.FC<MlLoginProps> = () => {
         icon: "error",
         title: "A problem occurred while logging in ",
         timer: 1500,
-        showConfirmButton:false
+        showConfirmButton: false,
       });
     }
   };
@@ -94,7 +94,7 @@ const MlLogin: React.FC<MlLoginProps> = () => {
   return (
     <>
       {userActive ? (
-        <div className="div-login-main">
+        <div className="div-login-main-profile">
           <MlProfile
             EmailAddress={userActive.email}
             fullName={userActive.displayName}
@@ -102,7 +102,7 @@ const MlLogin: React.FC<MlLoginProps> = () => {
           ></MlProfile>
         </div>
       ) : (
-        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-96">
+        <div className="div-login-main">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
               Sign in to your account
@@ -176,15 +176,22 @@ const MlLogin: React.FC<MlLoginProps> = () => {
                 </button>
               </div>
 
-              <div className="flex w-full justify-center h-12 pl-72 pr-72">
+              {/* <div className="div-google-login">
                 <img
                   src={`/assets/imgs/swg.jpg`}
                   alt="Logo"
                   className="w-full h-full cursor-pointer"
                   onClick={signInWithGoogle}
                 />
+              </div> */}
+              <div className="div-google-login">
+                <img
+                  src="/assets/imgs/swg.jpg"
+                  alt="Login width Google"
+                  className="img-responsive"
+                  onClick={signInWithGoogle}
+                />
               </div>
-              <div></div>
             </form>
             <p className="mt-10 text-center text-xl text-gray-500">
               Not a member?{" "}
