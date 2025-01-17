@@ -21,6 +21,7 @@ import Swal from "sweetalert2";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { GiConfirmed } from "react-icons/gi";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { useLocation } from "react-router-dom";
 
 const Stepper = () => {
   const navigate = useNavigate(); // Hook de React Router para la navegación
@@ -100,8 +101,6 @@ const Stepper = () => {
 
         return; // Salir si no hay usuario autenticado
       } else {
-        // Salir si no hay usuario autenticado
-
         const cartRef = doc(db, "carts", currentUser["uid"] || ""); // Referencia al carrito del usuario
 
         // Suscribirse a cambios en tiempo real en el documento del carrito
@@ -174,22 +173,19 @@ const Stepper = () => {
 
   useEffect(() => {
     if (currentStep === steps.length + 1) {
-      if (!currentUser) {
-        createOrderInvited();
-      } else {
-        createOrder();
-      }
+      // if (!currentUser) {
+      //   createOrderInvited();
+      // } else {
+      //   createOrder();
+      // }
       setCurrentStep(1);
-
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Order created",
-        showConfirmButton: false,
-        timer: 1000,
-      });
       // /boutique
-      navigate("/boutique"); // Redirige al usuario a la página de login
+      navigate("/payment", {
+        state: {
+          amount: subTotal, // Por ejemplo, el monto que necesitas pasar
+          currency: "EUR",
+        },
+      });
     }
   }, [currentStep]);
 

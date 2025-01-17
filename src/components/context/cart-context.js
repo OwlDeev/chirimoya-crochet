@@ -65,6 +65,7 @@ export function CartProvider({ children }) {
   const toggleCart = () => setCartOpen(!isCartOpen);
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
+  const cleanCart = () => setCart([]);
 
   return (
     <CartContext.Provider
@@ -76,6 +77,7 @@ export function CartProvider({ children }) {
         cart,
         productCount,
         addToCartInvited,
+        cleanCart,
       }}
     >
       {children}

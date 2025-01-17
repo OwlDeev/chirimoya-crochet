@@ -1,0 +1,15 @@
+.span-button-text{
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    background-color: #ffb8b7 !important;
+    width: 100px;
+}
+
+.div-button-payment{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

@@ -292,7 +292,7 @@ export default function Example() {
                         role="list"
                         className="-my-6 divide-y divide-gray-200"
                       >
-                        {productList.map((product) => (
+                        {refProductList.current.map((product) => (
                           <li key={product.id} className="flex py-6">
                             <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                               <img

@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import { IoBagCheck } from "react-icons/io5";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
+import { useNavigate } from "react-router-dom";
+
 
 interface MlShippingProps {
   onSubmit: (values: {
@@ -22,6 +24,7 @@ interface MlShippingProps {
 
 const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
   const [currentUser, setCurrentUser] = useState(null); // Estado para el usuario actual
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Escuchar cambios en el estado de autenticación
