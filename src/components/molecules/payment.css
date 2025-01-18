@@ -19,3 +19,16 @@
     padding-right: 300px;
     font-size: 40px;
 }
+
+@media (max-width: 767px) {
+    .div-payment{
+        padding-top: 10px !important;
+        padding-left: 10 !important;
+        padding-right: 10px !important;
+    }
+
+    .div-payment-info{
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
