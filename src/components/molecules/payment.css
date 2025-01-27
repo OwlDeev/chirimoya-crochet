@@ -4,9 +4,6 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding-top: 50px;
-    padding-left: 300px;
-    padding-right: 300px;
 }
 
 .div-payment-info{
@@ -15,9 +12,21 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding-left: 300px;
-    padding-right: 300px;
     font-size: 40px;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    .div-payment{
+        padding-top: 50px;
+        padding-left: 300px;
+        padding-right: 300px;
+    }
+
+    .div-payment-info{
+        padding-left: 300px;
+        padding-right: 300px;
+    }
 }
 
 @media (max-width: 767px) {

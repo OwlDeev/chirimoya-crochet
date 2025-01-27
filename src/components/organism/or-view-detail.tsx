@@ -173,8 +173,9 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
   };
 
   return (
-    <div className="mt-8 containerMovil">
-      <div className="pl-20 pr-20 pt-20 border-b border-gray-900/10 pb-12">
+    <div className="containerMovil">
+      <h1>Products</h1>
+      <div className="div-main-products">
         <ul role="list" className="-my-6 divide-y divide-gray-200">
           {productList.map((product: any, index: any) => (
             <li key={product.id} className="flex py-6">
@@ -202,10 +203,10 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
             </li>
           ))}
         </ul>
-        <div className="flex flex-row-reverse">{"Subtotal: " + subTotal}</div>
+        <div className="flex flex-row-reverse">{"Total: " + subTotal}</div>
       </div>
-
-      <div className="div-base-information border-b border-gray-900/10">
+      <h1>Shipping</h1>
+      <div className="div-base-information-shipping border-b border-gray-900/10">
         <table className="table-auto w-full rounded">
           <thead>
             <tr>
@@ -219,13 +220,21 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
           </thead>
           <tbody>
             <tr>
-              <td data-label="Address" className="p-2">{shippingData && shippingData["address"]}</td>
+              <td data-label="Address" className="p-2">
+                {shippingData && shippingData["address"]}
+              </td>
               <td data-label="Apartment" className="p-2">
                 {shippingData && shippingData["apartment"]}
               </td>
-              <td data-label="City" className="p-2">{shippingData && shippingData["city"]}</td>
-              <td data-label="Country" className="p-2">{shippingData && shippingData["country"]}</td>
-              <td data-label="Phone" className="p-2">{shippingData && shippingData["phone"]}</td>
+              <td data-label="City" className="p-2">
+                {shippingData && shippingData["city"]}
+              </td>
+              <td data-label="Country" className="p-2">
+                {shippingData && shippingData["country"]}
+              </td>
+              <td data-label="Phone" className="p-2">
+                {shippingData && shippingData["phone"]}
+              </td>
               <td data-label="Postal Code" className="p-2">
                 {shippingData && shippingData["postalCode"]}
               </td>
@@ -233,55 +242,67 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
           </tbody>
         </table>
       </div>
+
       <div className="div-email-state">
-        <div className="div-base-information border-b border-gray-900/10">
-          <table className="table-auto w-full">
-            <thead>
-              <tr>
-                <th className="text-start p-2">Email</th>
-                <th className="text-start p-2">Name</th>
-                <th className="text-start p-2">Surname</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Email" className="p-2">
-                  {personalDetailData && personalDetailData["email"]}
-                </td>
-                <td data-label="Name" className="p-2">
-                  {personalDetailData && personalDetailData["name"]}
-                </td>
-                <td data-label="Surname" className="p-2">
-                  {personalDetailData && personalDetailData["surname"]}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="div-main-email">
+          <h1>User</h1>
+          <div className="div-base-information border-b border-gray-900/10">
+            <table className="table-auto w-full">
+              <thead>
+                <tr>
+                  <th className="text-start p-2">Email</th>
+                  <th className="text-start p-2">Name</th>
+                  <th className="text-start p-2">Surname</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="Email" className="p-2">
+                    {personalDetailData && personalDetailData["email"]}
+                  </td>
+                  <td data-label="Name" className="p-2">
+                    {personalDetailData && personalDetailData["name"]}
+                  </td>
+                  <td data-label="Surname" className="p-2">
+                    {personalDetailData && personalDetailData["surname"]}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+
         {/* State */}
-        <div className="div-base-information border-b border-gray-900/10">
-          <table className="table-auto w-full">
-            <thead>
-              <tr>
-                <th className="text-start p-2">State</th>
-                <th className="text-start p-2">Date</th>
-                <th className="text-start p-2">Info</th>
-              </tr>
-            </thead>
-            <tbody>
-              {statesData &&
-                statesData.length > 0 &&
-                statesData.map((value: any) => (
-                  <tr key={value.state}>
-                    <td data-label="State" className="text-start p-2">{value.state}</td>
-                    <td data-label="Date" className="text-start p-2">{value.date}</td>
-                    <td data-label="Info" className="text-start p-2">
-                      <BsInfoSquare />
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        <div className="div-main-state">
+        <h1>State</h1>
+          <div className="div-base-information border-b border-gray-900/10">
+            <table className="table-auto w-full">
+              <thead>
+                <tr>
+                  <th className="text-start p-2">State</th>
+                  <th className="text-start p-2">Date</th>
+                  <th className="text-start p-2">Info</th>
+                </tr>
+              </thead>
+              <tbody>
+                {statesData &&
+                  statesData.length > 0 &&
+                  statesData.map((value: any) => (
+                    <tr key={value.state}>
+                      <td data-label="State" className="text-start p-2">
+                        {value.state}
+                      </td>
+                      <td data-label="Date" className="text-start p-2">
+                        {value.date}
+                      </td>
+                      <td data-label="Info" className="text-start p-2">
+                        <BsInfoSquare />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div className="div-buttons-main">

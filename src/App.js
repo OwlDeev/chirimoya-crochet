@@ -14,11 +14,10 @@ import MlBoutique from "./components/molecules/ml-boutique";
 import MlCart from "./components/molecules/ml-cart";
 import MlLogin from "./components/molecules/ml-login";
 import MlViewDetail from "./components/organism/or-view-detail";
-import OrCreateAccount from "./components/organism/or-create-account"
+import OrCreateAccount from "./components/organism/or-create-account";
 import Payment from "./components/molecules/Payment";
 import Completion from "./components/molecules/Completion";
 import { CartProvider, useCart } from "./components/context/cart-context"; // Importa el contexto y el hook
-
 const imageUrl = "/assets/imgs/hero-test.jpg";
 
 function AppContent() {

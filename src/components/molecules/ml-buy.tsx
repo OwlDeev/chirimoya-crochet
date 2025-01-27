@@ -2,14 +2,8 @@ import useState from "react-usestateref";
 import React, { useEffect } from "react";
 import "./ml-buy.css";
 import {
-  addDoc,
-  collection,
-  deleteDoc,
   doc,
   onSnapshot,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
   updateDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -17,11 +11,9 @@ import { auth, db } from "../../config/firebase-config";
 import { Link, useNavigate } from "react-router-dom";
 import OrPersonalDetail from "../organism/or-personal-detail";
 import OrShipping from "../organism/or-shipping";
-import Swal from "sweetalert2";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { GiConfirmed } from "react-icons/gi";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useLocation } from "react-router-dom";
 
 const Stepper = () => {
   const navigate = useNavigate(); // Hook de React Router para la navegación
@@ -140,104 +132,21 @@ const Stepper = () => {
     getProductList();
   }, [currentUser]);
 
-  const createOrderInvited = async () => {
-    const cart = JSON.parse(localStorage.getItem("guestCart") || "[]");
-    const personalDetail = JSON.parse(
-      localStorage.getItem("guestPersonalDetail") || "[]"
-    );
-    const shipping = JSON.parse(localStorage.getItem("guestShipping") || "[]");
-    const total = JSON.parse(localStorage.getItem("guestTotal") || "[]");
-
-    const uidInvited = `invited-${new Date()
-      .toISOString()
-      .replace(/[-:.TZ]/g, "")}`;
-    const orderRef = doc(db, "orders", uidInvited); // ID único
-    await setDoc(orderRef, {
-      userId: uidInvited,
-      items: cart,
-      total: total,
-      timestamp: serverTimestamp(),
-      personalDetail: personalDetail, // Datos del paso personalDetail
-      shipping: shipping, // Datos del paso shipping
-      states: [
-        {
-          state: "Pending",
-          date: new Date().toLocaleDateString(), // Fecha actual
-        },
-      ],
-    });
-
-    console.log("Pedido creado exitosamente.");
-    localStorage.removeItem("guestCart");
-  };
-
   useEffect(() => {
     if (currentStep === steps.length + 1) {
-      // if (!currentUser) {
-      //   createOrderInvited();
-      // } else {
-      //   createOrder();
-      // }
       setCurrentStep(1);
       // /boutique
       navigate("/payment", {
         state: {
           amount: subTotal, // Por ejemplo, el monto que necesitas pasar
           currency: "EUR",
+          productList: productList,
+          personalDetailData: personalDetailData,
+          shippingData: shippingData,
         },
       });
     }
   }, [currentStep]);
-
-  const createOrder = async () => {
-    try {
-      // Obtener el usuario actual
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        console.error("Usuario no autenticado.");
-        return;
-      }
-
-      const uid = currentUser.uid;
-
-      // Referencia al carrito del usuario
-      const cartRef = doc(db, "carts", uid);
-
-      // Obtener datos del carrito (esto supone que los datos están almacenados localmente o se obtienen directamente del carrito en tiempo real)
-      const cartData = {
-        items: productList,
-        total: 100, // Reemplaza con el total calculado
-      };
-
-      // Crear un nuevo pedido
-      const orderRef = doc(db, "orders", `${Date.now()}`); // ID único
-      await setDoc(orderRef, {
-        userId: uid,
-        items: cartData.items,
-        total: cartData.total,
-        timestamp: serverTimestamp(),
-        personalDetail: personalDetailData, // Datos del paso personalDetail
-        shipping: shippingData, // Datos del paso shipping
-        states: [
-          {
-            state: "Pending",
-            date: new Date().toLocaleDateString(), // Fecha actual
-          },
-        ],
-      });
-
-      console.log("Pedido creado exitosamente.");
-
-      // Eliminar el carrito después de crear el pedido
-      await deleteDoc(cartRef);
-
-      //limpia variables
-      setSubTotal(0);
-      localStorage.setItem("guestTotal", JSON.stringify(0));
-    } catch (error) {
-      console.error("Error al crear el pedido o eliminar el carrito:", error);
-    }
-  };
 
   const changeStep = (action: string) => {
     if (action === "preview") setCurrentStep(currentStep - 1);

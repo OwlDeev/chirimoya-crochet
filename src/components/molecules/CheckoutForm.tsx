@@ -1,17 +1,24 @@
 import { PaymentElement } from "@stripe/react-stripe-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { Link } from "react-router-dom";
 import "./checkoutform.css";
 
-export default function CheckoutForm() {
+interface CheckoutFormProps {
+  amount: number; // Define el tipo de la prop que recibirá
+  productlist: [];
+  shippingData: {};
+  personalDetailData: {};
+}
+
+const CheckoutForm: React.FC<CheckoutFormProps> = ({ amount, productlist, shippingData, personalDetailData }) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
@@ -21,18 +28,20 @@ export default function CheckoutForm() {
     }
 
     setIsProcessing(true);
-    let prueba = `${window.location.origin}/completion`;
-    console.log(prueba);
+    sessionStorage.setItem("productList", JSON.stringify(productlist));
+    sessionStorage.setItem("amount", amount.toString());
+    sessionStorage.setItem("shippingData", JSON.stringify(shippingData));
+    sessionStorage.setItem("personalDetailData", JSON.stringify(personalDetailData));
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `${window.location.origin}/completion`,
+        return_url: `${window.location.origin}/completion?from=session`,
       },
     });
 
     if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
+      setMessage(error.message || "An error occurred");
     } else {
       setMessage("An unexpected error occured.");
     }
@@ -63,3 +72,5 @@ export default function CheckoutForm() {
     </div>
   );
 }
+
+export default CheckoutForm;

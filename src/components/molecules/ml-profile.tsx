@@ -216,12 +216,12 @@ export default function MlProfile({ EmailAddress = "" }: MlProfile) {
       <form>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="ml-8 text-base/7 font-semibold text-gray-900">
+            <h1>
               Profile
-            </h2>
+            </h1>
             <div className="grid grid-cols-1 gap-1 p-4">
               {/* Columna Izquierda: Información básica */}
-              <div className="h-full w-full div-basic-information">
+              <div className="h-full w-full div-basic-information-profile">
                 <div className="p-4 flex grid grid-cols-[30%,70%] gap-1">
                   <label
                     htmlFor="username"
@@ -309,10 +309,10 @@ export default function MlProfile({ EmailAddress = "" }: MlProfile) {
 
             {/* Order List */}
             <div className="flex w-full h-full p-4 flex-col ">
-              <h2 className="m-4 text-base/7 font-semibold text-gray-900">
+              <h1 className="h1-order-list">
                 Order List
-              </h2>
-              <div className="div-base-information">
+              </h1>
+              <div className="div-base-information-order-list">
                 <table className="table-auto w-full h-full ">
                   <thead>
                     <tr>

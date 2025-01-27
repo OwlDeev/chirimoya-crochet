@@ -5,6 +5,7 @@
   flex-direction: column;
   padding-left: 100px;
   padding-right: 100px;
+  padding-top: 20px;
 }
 
 .div-login-main-profile form {
@@ -16,7 +17,7 @@
   padding-top: 50px;
 }
 
-.div-login-main-profile .div-basic-information {
+.div-login-main-profile .div-basic-information-profile {
   border: 1px;
   border-color: #ffb8b7;
   box-shadow: #ffb8b7 20px 20px 20px;
@@ -61,6 +62,30 @@
   padding-left: 1rem;
 }
 
+.div-base-information-order-list{
+  display: flex;
+  flex-direction: column;
+  padding-left: 0px !important;
+  padding-right: 1rem /* 20px */;
+  padding-top: 1rem /* 12px */;
+  padding-bottom: 1rem /* 12px */;
+  margin: 0px !important;
+  border: 1px;
+  border-color: #ffb8b7;
+  box-shadow: #ffb8b7 10px 10px 10px;
+  border-style: solid;
+  border-radius: 20px;
+}
+
+.div-login-main-profile h1 {
+  font-size: 2rem;
+  padding-left: 30px;
+}
+
+.h1-order-list{
+  padding-left: 15px !important;
+}
+
 /* Estilos para dispositivos móviles */
 @media (max-width: 767px) {
   .div-login-main-profile {
@@ -75,7 +100,7 @@
     overflow-x: hidden;
   }
 
-  .div-login-main-profile .div-basic-information {
+  .div-login-main-profile .div-basic-information-profile {
     width: 100%;
     box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
   }
@@ -98,28 +123,12 @@
 
   .table-td{
     padding-left: 1rem;
+    width: 100%;
   }
 
-  .div-base-information{
+  .div-login-main-profile .div-basic-information-profile {
     display: flex;
     flex-direction: column;
-    padding-left: 1rem /* 20px */;
-    padding-right: 1rem /* 20px */;
-    padding-top: 1rem /* 12px */;
-    padding-bottom: 1rem /* 12px */;
-    margin: 0px !important;
-    border: 1px;
-    border-color: #ffb8b7;
-    box-shadow: #ffb8b7 10px 10px 10px;
-    border-style: solid;
-    border-radius: 20px;
-  }
-
-  .div-login-main-profile .div-basic-information {
-    display: flex;
-    flex-direction: column;
-    padding-left: 1rem /* 20px */;
-    padding-right: 1rem /* 20px */;
     padding-top: 1rem /* 12px */;
     padding-bottom: 1rem /* 12px */;
 
@@ -128,5 +137,16 @@
     box-shadow: #ffb8b7 10px 10px 10px;
     border-style: solid;
     border-radius: 20px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .color-button {
+width: fit-content;
+  }
+
+  .div-basic-information-profile-profile{
+    max-width: 100% !important;
   }
 }
