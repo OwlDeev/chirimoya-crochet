@@ -10,7 +10,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 import { useNavigate } from "react-router-dom";
 
-
 interface MlShippingProps {
   onSubmit: (values: {
     address: string;
@@ -21,6 +20,58 @@ interface MlShippingProps {
     postalCode: string;
   }) => void;
 }
+
+const europeanCountries = [
+  "AL",
+  "AD",
+  "AM",
+  "AT",
+  "AZ",
+  "BY",
+  "BE",
+  "BA",
+  "BG",
+  "HR",
+  "CY",
+  "CZ",
+  "DK",
+  "EE",
+  "FI",
+  "FR",
+  "GE",
+  "DE",
+  "GR",
+  "HU",
+  "IS",
+  "IE",
+  "IT",
+  "KZ",
+  "LV",
+  "LI",
+  "LT",
+  "LU",
+  "MT",
+  "MC",
+  "MD",
+  "ME",
+  "NL",
+  "MK",
+  "NO",
+  "PL",
+  "PT",
+  "RO",
+  "RU",
+  "SM",
+  "RS",
+  "SK",
+  "SI",
+  "ES",
+  "SE",
+  "CH",
+  "TR",
+  "UA",
+  "VA",
+];
 
 const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
   const [currentUser, setCurrentUser] = useState(null); // Estado para el usuario actual
@@ -85,155 +136,162 @@ const MlShipping: React.FC<MlShippingProps> = ({ onSubmit }) => {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} className="pl-80 pr-80 pt-20">
-      <div>
-        <label
-          htmlFor="address"
-          className="block text-sm font-medium text-gray-900"
-        >
-          Address
-        </label>
-        <div className="mt-2">
-          <input
-            id="address"
-            name="address"
-            type="text"
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-            placeholder="Example: Saint Vincent 1414, Lyon"
-            value={formik.values.address}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.touched.address && formik.errors.address && (
-            <div className="text-red-500 text-sm">{formik.errors.address}</div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4">
-        <label
-          htmlFor="apartment"
-          className="block text-sm font-medium text-gray-900"
-        >
-          Apartment, suite, etc.
-        </label>
-        <div className="mt-2">
-          <input
-            id="apartment"
-            name="apartment"
-            type="text"
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-            placeholder="Example: Apartment 1B"
-            value={formik.values.apartment}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.touched.apartment && formik.errors.apartment && (
-            <div className="text-red-500 text-sm">
-              {formik.errors.apartment}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4 flex flex-row">
-        <div className="w-full">
+    <div className="div-main-shipping">
+      <form onSubmit={formik.handleSubmit} className="pl-80 pr-80 pt-20">
+        <div>
           <label
-            htmlFor="country"
+            htmlFor="address"
             className="block text-sm font-medium text-gray-900"
           >
-            Country
-          </label>
-          <ReactFlagsSelect
-            selected={formik.values.country}
-            onSelect={(value) => formik.setFieldValue("country", value)}
-            searchable
-            searchPlaceholder="Search countries 🔎"
-            className="w-full"
-          />
-          {formik.touched.country && formik.errors.country && (
-            <div className="text-red-500 text-sm">{formik.errors.country}</div>
-          )}
-        </div>
-        <div className="w-full ml-4">
-          <label
-            htmlFor="city"
-            className="block text-sm font-medium text-gray-900"
-          >
-            City
+            Address
           </label>
           <div className="mt-2">
             <input
-              id="city"
-              name="city"
+              id="address"
+              name="address"
               type="text"
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-              placeholder="Example: Lyon"
-              value={formik.values.city}
+              placeholder="Example: Saint Vincent 1414, Lyon"
+              value={formik.values.address}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.city && formik.errors.city && (
-              <div className="text-red-500 text-sm">{formik.errors.city}</div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4 flex flex-row">
-        <div className="w-full">
-          <label
-            htmlFor="phone"
-            className="block text-sm font-medium text-gray-900"
-          >
-            Phone
-          </label>
-          <PhoneInput
-            country="us"
-            value={formik.values.phone}
-            onChange={(value) => formik.setFieldValue("phone", value)}
-          />
-          {formik.touched.phone && formik.errors.phone && (
-            <div className="text-red-500 text-sm">{formik.errors.phone}</div>
-          )}
-        </div>
-        <div className="w-full ml-4">
-          <label
-            htmlFor="postalCode"
-            className="block text-sm font-medium text-gray-900"
-          >
-            Postal code
-          </label>
-          <div className="mt-2">
-            <input
-              id="postalCode"
-              name="postalCode"
-              type="text"
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
-              placeholder="Example: 65003"
-              value={formik.values.postalCode}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.postalCode && formik.errors.postalCode && (
+            {formik.touched.address && formik.errors.address && (
               <div className="text-red-500 text-sm">
-                {formik.errors.postalCode}
+                {formik.errors.address}
               </div>
             )}
           </div>
         </div>
-      </div>
 
-      <div className="mt-6 flex flex-row-reverse">
-        <button
-          type="submit"
-          className="flex flex-row color-button rounded-md border border-transparent px-6 py-3 text-base font-medium"
-        >
-          Buy
-          <IoBagCheck className="mt-1 ml-2" />
-        </button>
-      </div>
-    </form>
+        <div className="mt-4">
+          <label
+            htmlFor="apartment"
+            className="block text-sm font-medium text-gray-900"
+          >
+            Apartment, suite, etc.
+          </label>
+          <div className="mt-2">
+            <input
+              id="apartment"
+              name="apartment"
+              type="text"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
+              placeholder="Example: Apartment 1B"
+              value={formik.values.apartment}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.apartment && formik.errors.apartment && (
+              <div className="text-red-500 text-sm">
+                {formik.errors.apartment}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-row">
+          <div className="w-full">
+            <label
+              htmlFor="country"
+              className="block text-sm font-medium text-gray-900"
+            >
+              Country
+            </label>
+            <ReactFlagsSelect
+              countries={europeanCountries} // Muestra solo países europeos
+              selected={formik.values.country}
+              onSelect={(value) => formik.setFieldValue("country", value)}
+              searchable
+              searchPlaceholder="Search countries 🔎"
+              className="w-full"
+            />
+            {formik.touched.country && formik.errors.country && (
+              <div className="text-red-500 text-sm">
+                {formik.errors.country}
+              </div>
+            )}
+          </div>
+          <div className="w-full ml-4">
+            <label
+              htmlFor="city"
+              className="block text-sm font-medium text-gray-900"
+            >
+              City
+            </label>
+            <div className="mt-2">
+              <input
+                id="city"
+                name="city"
+                type="text"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
+                placeholder="Example: Lyon"
+                value={formik.values.city}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.city && formik.errors.city && (
+                <div className="text-red-500 text-sm">{formik.errors.city}</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-row">
+          <div className="w-full">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-900"
+            >
+              Phone
+            </label>
+            <PhoneInput
+              country="fr"
+              value={formik.values.phone}
+              onChange={(value) => formik.setFieldValue("phone", value)}
+            />
+            {formik.touched.phone && formik.errors.phone && (
+              <div className="text-red-500 text-sm">{formik.errors.phone}</div>
+            )}
+          </div>
+          <div className="w-full ml-4">
+            <label
+              htmlFor="postalCode"
+              className="block text-sm font-medium text-gray-900"
+            >
+              Postal code
+            </label>
+            <div className="mt-2">
+              <input
+                id="postalCode"
+                name="postalCode"
+                type="text"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"
+                placeholder="Example: 65003"
+                value={formik.values.postalCode}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.postalCode && formik.errors.postalCode && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.postalCode}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-row-reverse">
+          <button
+            type="submit"
+            className="flex flex-row color-button rounded-md border border-transparent px-6 py-3 text-base font-medium"
+          >
+            Buy
+            <IoBagCheck className="mt-1 ml-2" />
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

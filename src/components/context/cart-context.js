@@ -1,6 +1,6 @@
 // src/context/CartContext.js
-
-import React, { createContext, useContext, useState, useEffect } from "react";
+import useState from "react-usestateref";
+import React, { createContext, useContext, useEffect } from "react";
 
 // Crear el contexto
 const CartContext = createContext();
@@ -13,7 +13,7 @@ export function useCart() {
 // Proveedor del contexto
 export function CartProvider({ children }) {
   const [isCartOpen, setCartOpen] = useState(false);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart, refCart] = useState([]);
 
   // Obtener el carrito desde localStorage al inicio
   useEffect(() => {
@@ -60,13 +60,20 @@ export function CartProvider({ children }) {
   };
 
   // Contar los productos en el carrito
-  const productCount = cart.reduce((total, item) => total + item.quantity, 0);
+  let productCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  useEffect(() => {
+    productCount =
+      refCart.current.length > 0
+        ? cart.reduce((total, item) => total + item.quantity, 0)
+        : 0;
+  }, [cart]);
 
   const toggleCart = () => setCartOpen(!isCartOpen);
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
   const cleanCart = () => setCart([]);
-
+  console.log("Carrito después de limpiar:", cart);
   return (
     <CartContext.Provider
       value={{

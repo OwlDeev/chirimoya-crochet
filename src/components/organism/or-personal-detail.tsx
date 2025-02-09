@@ -68,92 +68,94 @@ const MlPersonalDetail: React.FC<MlPersonalDetailProps> = ({ onSubmit }) => {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} className="pl-80 pr-80 pt-20">
-      <div className="flex flex-row">
-        <div className="w-full mr-4">
+    <div className="w-full h-full flex flex-col items-center justify-center div-main-personal-detail">
+      <form onSubmit={formik.handleSubmit} className="pl-80 pr-80 pt-20">
+        <div className="flex flex-row">
+          <div className="w-full mr-4">
+            <label
+              htmlFor="name"
+              className="block text-sm/6 font-medium text-gray-900"
+            >
+              Name
+            </label>
+            <div className="mt-2">
+              <input
+                id="name"
+                name="name"
+                type="text"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                placeholder="Example: John"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.name && formik.errors.name && (
+                <div className="text-red-500 text-sm">{formik.errors.name}</div>
+              )}
+            </div>
+          </div>
+          <div className="w-full ml-4">
+            <label
+              htmlFor="surname"
+              className="block text-sm/6 font-medium text-gray-900"
+            >
+              Surname
+            </label>
+            <div className="mt-2">
+              <input
+                id="surname"
+                name="surname"
+                type="text"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                placeholder="Example: Snow"
+                value={formik.values.surname}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.surname && formik.errors.surname && (
+                <div className="text-red-500 text-sm">
+                  {formik.errors.surname}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4">
           <label
-            htmlFor="name"
+            htmlFor="email"
             className="block text-sm/6 font-medium text-gray-900"
           >
-            Name
+            Email address
           </label>
           <div className="mt-2">
             <input
-              id="name"
-              name="name"
-              type="text"
+              id="email"
+              name="email"
+              type="email"
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-              placeholder="Example: John"
-              value={formik.values.name}
+              placeholder="Example: john.snow@example.com"
+              value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.name && formik.errors.name && (
-              <div className="text-red-500 text-sm">{formik.errors.name}</div>
+            {formik.touched.email && formik.errors.email && (
+              <div className="text-red-500 text-sm">{formik.errors.email}</div>
             )}
           </div>
         </div>
-        <div className="w-full ml-4">
-          <label
-            htmlFor="surname"
-            className="block text-sm/6 font-medium text-gray-900"
+
+        <div className="mt-6 flex flex-row-reverse">
+          <button
+            type="submit"
+            className="flex flex-row color-button rounded-md border border-transparent px-6 py-3 text-base font-medium"
           >
-            Surname
-          </label>
-          <div className="mt-2">
-            <input
-              id="surname"
-              name="surname"
-              type="text"
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-              placeholder="Example: Snow"
-              value={formik.values.surname}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.surname && formik.errors.surname && (
-              <div className="text-red-500 text-sm">
-                {formik.errors.surname}
-              </div>
-            )}
-          </div>
+            Confirm and Next
+            <GiConfirmed className="mt-1 ml-2" />
+          </button>
         </div>
-      </div>
-
-      <div className="mt-4">
-        <label
-          htmlFor="email"
-          className="block text-sm/6 font-medium text-gray-900"
-        >
-          Email address
-        </label>
-        <div className="mt-2">
-          <input
-            id="email"
-            name="email"
-            type="email"
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-            placeholder="Example: john.snow@example.com"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.touched.email && formik.errors.email && (
-            <div className="text-red-500 text-sm">{formik.errors.email}</div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-6 flex flex-row-reverse">
-        <button
-          type="submit"
-          className="flex flex-row color-button rounded-md border border-transparent px-6 py-3 text-base font-medium"
-        >
-          Confirm and Next
-          <GiConfirmed className="mt-1 ml-2" />
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

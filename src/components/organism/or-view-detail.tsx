@@ -50,50 +50,61 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
 
   const getProductList = async () => {
     try {
-      if (!currentUser) {
-        // Obtener los productos desde localStorage
-        const storedProducts = JSON.parse(
-          localStorage.getItem("guestCart") || "[]"
-        );
+      if (!currentUser && orderId == "") {
+        if (orderId == "") {
+          Swal.fire({
+            position: "center",
+            icon: "question",
+            title: "Order empty",
+            showConfirmButton: false,
+            timer: 1500,
+            didClose: () => {
+              navigate("/"); // Redirige al usuario a la página de login
+            },
+          });
+        } else {
+          // Obtener los productos desde localStorage
+          const storedProducts = JSON.parse(
+            localStorage.getItem("guestCart") || "[]"
+          );
 
-        // Agrupar los productos por ID y sumar sus cantidades
-        const productMap = storedProducts.reduce((acc: any, item: any) => {
-          if (acc[item.id]) {
-            // Si el producto ya existe, sumar la cantidad
-            acc[item.id].quantity += item.quantity;
-          } else {
-            // Si no existe, agregar al mapa
-            acc[item.id] = { ...item };
-          }
-          return acc;
-        }, {});
+          // Agrupar los productos por ID y sumar sus cantidades
+          const productMap = storedProducts.reduce((acc: any, item: any) => {
+            if (acc[item.id]) {
+              // Si el producto ya existe, sumar la cantidad
+              acc[item.id].quantity += item.quantity;
+            } else {
+              // Si no existe, agregar al mapa
+              acc[item.id] = { ...item };
+            }
+            return acc;
+          }, {});
 
-        // Convertir el mapa a un array y formatear los datos
-        const formattedItems = Object.values(productMap).map((item: any) => ({
-          id: String(item.id), // Convertir a string si es necesario
-          desc: item.desc || "", // Valor predeterminado si no existe
-          href: item.href || 0, // Valor predeterminado si no existe
-          description: item.description || "",
-          title: item.title || "",
-          price: item.price || 0,
-          quantity: item.quantity || 0,
-          srcImage: item.srcImage || "",
-        }));
+          // Convertir el mapa a un array y formatear los datos
+          const formattedItems = Object.values(productMap).map((item: any) => ({
+            id: String(item.id), // Convertir a string si es necesario
+            desc: item.desc || "", // Valor predeterminado si no existe
+            href: item.href || 0, // Valor predeterminado si no existe
+            description: item.description || "",
+            title: item.title || "",
+            price: item.price || 0,
+            quantity: item.quantity || 0,
+            srcImage: item.srcImage || "",
+          }));
 
-        // Calcular el subtotal
-        const totalSubTotal = formattedItems.reduce(
-          (sum: any, item: any) => sum + item.price * item.quantity,
-          0
-        );
+          // Calcular el subtotal
+          const totalSubTotal = formattedItems.reduce(
+            (sum: any, item: any) => sum + item.price * item.quantity,
+            0
+          );
 
-        // Actualizar el estado
-        setSubTotal(totalSubTotal);
-        setProductList(formattedItems);
+          // Actualizar el estado
+          setSubTotal(totalSubTotal);
+          setProductList(formattedItems);
 
-        return; // Salir si no hay usuario autenticado
+          return; // Salir si no hay usuario autenticado
+        }
       } else {
-        // Salir si no hay usuario autenticado
-
         const orderRef = doc(db, "orders", orderId || ""); // Referencia al carrito del usuario
 
         // Suscribirse a cambios en tiempo real en el documento del carrito
@@ -123,6 +134,16 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
             setProductList(formattedItems);
           } else {
             console.log("No se encontró el carrito para este usuario.");
+            Swal.fire({
+              position: "center",
+              icon: "question",
+              title: "Order empty",
+              showConfirmButton: false,
+              timer: 1500,
+              didClose: () => {
+                navigate("/"); // Redirige al usuario a la página de login
+              },
+            });
             setProductList([]); // Vaciar el carrito si no existe
           }
         });
@@ -274,7 +295,7 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
 
         {/* State */}
         <div className="div-main-state">
-        <h1>State</h1>
+          <h1>State</h1>
           <div className="div-base-information border-b border-gray-900/10">
             <table className="table-auto w-full">
               <thead>
@@ -300,6 +321,25 @@ const MlViewDetail: React.FC<MlViewDetailProps> = () => {
                       </td>
                     </tr>
                   ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="w-full h-full whitespace-nowrap flex flex-col ml-5">
+          <h1>Order</h1>
+          <div className="div-base-information border-b border-gray-900/10">
+            <table className="table-auto w-full">
+              <thead>
+                <tr>
+                  <th className="text-start p-2">Number Order</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="State" className="text-start p-2">
+                    {orderId}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

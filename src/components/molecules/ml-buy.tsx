@@ -206,63 +206,6 @@ const Stepper = () => {
 
   return (
     <div className="div-main-buy">
-      {/* <div className="flex items-start div-main-progress-bar pt-10 pl-48">
-        {steps.map((step, index) => (
-          <div className="flex w-full h-fullborder" key={step.id}>
-            
-            <div className="flex items-start">
-              <div
-                className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                  step.id < currentStep
-                    ? "option-one-step"
-                    : step.id === currentStep
-                    ? "border-2 option-two-step"
-                    : "border-2 option-tree-step"
-                }`}
-              >
-                {step.id < currentStep ? (
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M5 13l4 4L19 7"
-                    ></path>
-                  </svg>
-                ) : (
-                  step.id
-                )}
-              </div>
-              <span
-                className={`ml-2 ${
-                  step.id <= currentStep
-                    ? "color-text-primary font-medium"
-                    : "color-text-primary"
-                }`}
-              >
-                {step.label}
-              </span>
-            </div>
-           
-            {index < steps.length - 1 && (
-              <div
-                className={`mt-5 flex-auto border-t-2 mx-4 ${
-                  step.id < currentStep
-                    ? "color-text-primary"
-                    : "border-gray-300"
-                }`}
-              ></div>
-            )}
-          </div>
-        ))}
-      </div> */}
-
       <div className="steps-container">
         {steps.map((step, index) => (
           <div key={step.id} className={`step-item ${step.id === currentStep ? 'active' : ''}`}>
@@ -322,7 +265,7 @@ const Stepper = () => {
 
       {/* Tabla con productos */}
       {currentStep === 1 && (
-        <div className="pl-20 pr-20 pt-20">
+        <div className="pl-20 pr-20 pt-20 pb-20">
           <ul role="list" className="-my-6 divide-y divide-gray-200">
             {productList.map((product) => (
               <li key={product.id} className="flex py-6">
@@ -392,7 +335,7 @@ const Stepper = () => {
 
       {/* Botones */}
       {currentStep !== 4 ? (
-        <div className="div-buttons-buy flex flex-row h-full w-full justify-between p-20">
+        <div className="div-buttons-buy flex flex-row h-full w-full justify-between">
           <div className="flex flex-row h-full w-full">
             {currentStep === 1 ? (
               <Link

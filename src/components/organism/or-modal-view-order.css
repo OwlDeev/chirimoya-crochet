@@ -1,0 +1,84 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 70%;
+    text-align: center;
+  }
+
+  .div-main-modal-view-order{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding-top: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 50px;
+  }
+
+  .div-input-modal-view-order{
+    align-self: anchor-center !important;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .input-modal-view-order{
+    border-color: rgba(0, 0, 0, 0.185);
+    border: solid 2px;
+    border-radius: 5px;
+    font-size: large;
+  }
+
+  h1{
+    padding-left: 0px !important;
+  }
+
+  .color-button {
+    background-color: #ffb8b7;
+    color: white;
+  }
+  
+  .color-button:hover {
+    background-color: #ffe4e3 !important;
+    color: white !important;
+  }
+
+  .div-button-right-mvo{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-direction: row-reverse;
+    padding-right: 40px;
+  }
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 767px) {
+  .div-main-modal-view-order{
+    padding-right: 10px;
+    flex-direction: column;
+  }
+
+  .div-button-right-mvo{
+    padding-right: 30px !important;
+  }
+
+  .div-input-modal-view-order{
+    padding-left: 0px;
+  }
+}

@@ -9,7 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./completion.css";
 import Swal from "sweetalert2";
 import { useCart } from "../context/cart-context";
@@ -67,7 +67,7 @@ const Completion: React.FC<CompletionProps> = ({}) => {
   }, []);
 
   const ViewOrderHistor = () => {
-    navigate("/order-history");
+    navigate("/detail-order");
   };
 
   useEffect(() => {
@@ -175,8 +175,11 @@ const Completion: React.FC<CompletionProps> = ({}) => {
       ],
     });
 
-    console.log("Pedido creado exitosamente.");
-    localStorage.removeItem("guestCart");
+    // console.log("Pedido creado exitosamente.");
+    // localStorage.setItem("guestCart", JSON.stringify([]));
+    // localStorage.setItem("guestPersonalDetail", "{}");
+    // localStorage.setItem("guestShipping", "{}");
+    // cleanCart();
   };
 
   const createOrder = async () => {
@@ -225,7 +228,6 @@ const Completion: React.FC<CompletionProps> = ({}) => {
 
       //limpia variables
       // setSubTotal(0);
-      localStorage.setItem("guestTotal", JSON.stringify(0));
     } catch (error) {
       console.error("Error al crear el pedido o eliminar el carrito:", error);
     }
@@ -248,7 +250,14 @@ const Completion: React.FC<CompletionProps> = ({}) => {
         0
       ); // Calcula el total
 
-      const response = await fetch("http://localhost:5253/send-email", {
+      localStorage.setItem("guestTotal", JSON.stringify(0));
+      localStorage.setItem("guestCart", JSON.stringify([]));
+      localStorage.setItem("guestPersonalDetail", "{}");
+      localStorage.setItem("guestShipping", "{}");
+      cleanCartProducts(); // Limpia el carrito
+      cleanCart();
+
+      const response = await fetch("https://chirimoyacrochet.com:5253/send-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -267,8 +276,8 @@ const Completion: React.FC<CompletionProps> = ({}) => {
         throw new Error("Error en el envío del correo");
       }
       const data = await response.json();
-      cleanCartProducts(); // Limpia el carrito
-      cleanCart();
+      // cleanCartProducts(); // Limpia el carrito
+      // cleanCart();
       console.log("Respuesta del servidor:", data);
     } catch (error) {
       console.error("Error:", error);
@@ -344,7 +353,13 @@ const Completion: React.FC<CompletionProps> = ({}) => {
         >
           Continue Shopping
         </button>
-        <button onClick={ViewOrderHistor}>View Order History</button>
+        <Link
+          className="link-completion"
+          to="/detail-order"
+          state={{ orderId: refDocRefOrder.current }}
+        >
+          View Order History
+        </Link>
       </div>
     </div>
   );

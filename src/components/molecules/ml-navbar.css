@@ -96,6 +96,13 @@
     margin-left: 10px;
   }
 
+  .iconNavbarMobile{
+    color: #ffb8b7 !important;
+    justify-content: end;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
   .color-mobile {
     color: #ffb8b7;
   }

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import "./ml-navbar.css";
 import { useCart } from "../context/cart-context";
-import { FaHouse } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { FaStore } from "react-icons/fa";
 import { auth, db } from "../../config/firebase-config";
@@ -17,6 +17,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import OrModalViewOrder from "../organism/or-modal-view-order";
 
 const MlNavbar = () => {
   const [menuOpen, setMenuOpen, refMenuOpen] = useState(false);
@@ -25,6 +26,7 @@ const MlNavbar = () => {
   const [currentUser, setCurrentUser] = useState(null); // Estado para guardar el usuario actual
   const [nameUser, setNameUser] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // Escuchar cambios en el estado de autenticación del usuario
@@ -170,6 +172,11 @@ const MlNavbar = () => {
     toggleCart();
   };
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    closeMenu();
+  };
+
   return (
     <div className="flex w-full" ref={menuRef}>
       <header className="navbar-fixed">
@@ -184,18 +191,18 @@ const MlNavbar = () => {
                   className="whitespace-nowrap text-base font-medium text-white cursor-pointer items-center button-cart"
                   onClick={closeMenu}
                 >
-                  {currentUser ? "Profile" : "LOGIN"}
+                  {currentUser ? "PROFILE" : "LOGIN"}
                   <FaUser className="iconNavbar" />
                 </Link>
 
-                <Link
-                  to="/home"
+                <button
                   className="h-full w-full text-base font-medium text-white cursor-pointer items-center button-cart"
-                  onClick={closeMenu}
+                  onClick={toggleModal}
                 >
-                  HOME
-                  <FaHouse className="iconNavbar" />
-                </Link>
+                  {" "}
+                  VIEW ORDER
+                  <FaSearch className="iconNavbar" />
+                </button>
               </div>
 
               {/* Logo */}
@@ -265,18 +272,20 @@ const MlNavbar = () => {
               <div className="flex flex-col space-y-2">
                 <Link
                   to="/boutique"
-                  className="py-2 text-base font-medium text-black"
+                  className="py-2 text-base font-medium text-black flex flex-row"
                   onClick={closeMenu}
                 >
+                  <FaStore className="iconNavbarMobile"/>
                   Store
                 </Link>
-                <Link
-                  to="/home"
-                  className="py-2 text-base font-medium text-black"
-                  onClick={closeMenu}
+                <button
+                  className="py-2 text-base font-medium text-black text-justify flex flex-row"
+                  onClick={toggleModal}
                 >
-                  Home
-                </Link>
+                  {" "}
+                  <FaSearch className="iconNavbarMobile" />
+                  View Order
+                </button>
 
                 <div
                   onClick={toggleMenu}
@@ -293,9 +302,10 @@ const MlNavbar = () => {
               <div className="flex flex-col space-y-2">
                 <Link
                   to="/login"
-                  className="py-2 text-base font-medium text-black"
+                  className="py-2 text-base font-medium text-black flex flex-row"
                   onClick={closeMenu}
                 >
+                  <FaUser className="iconNavbarMobile" />
                   {currentUser ? "Profile" : "Login"}
                 </Link>
               </div>
@@ -303,6 +313,9 @@ const MlNavbar = () => {
           </div>
         )}
       </header>
+      {isModalOpen && (
+        <OrModalViewOrder isOpen={isModalOpen} onClose={toggleModal} />
+      )}
     </div>
   );
 };

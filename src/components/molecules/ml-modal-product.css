@@ -4,6 +4,7 @@
       align-items: center;
       justify-content: center;
       height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la pantalla */
+      padding-top: 1px;
     }
   
     .modal-content {
@@ -11,4 +12,12 @@
       max-width: 400px; /* Ancho máximo del modal */
       margin: auto; /* Centra el modal horizontalmente */
     }
+  }
+
+  .modal-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la pantalla */
+    padding-top: 100px;
   }

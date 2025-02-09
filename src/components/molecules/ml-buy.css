@@ -50,7 +50,9 @@
     height: 100%; /* h-full */
     width: 100%; /* w-full */
     justify-content: space-between; /* justify-between */
-    padding: 5rem; /* p-20 (equivale a 20 * 0.25rem = 5rem) */
+    padding-bottom: 5rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
   }
 
   .div-main-buy {
@@ -82,7 +84,9 @@
     height: 100%; /* h-full */
     width: 100%; /* w-full */
     justify-content: space-between; /* justify-between */
-    padding: 1rem; 
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
   }
 
   .div-main-buy {

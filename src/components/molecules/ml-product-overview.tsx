@@ -50,7 +50,6 @@ export default function MlProductOverview({
       const currentUser = auth.currentUser;
 
       if (!currentUser) {
-        if (!currentUser) {
           let cart = JSON.parse(localStorage.getItem("guestCart") || "[]"); // Si es null, usa un array vacío por defecto
 
           cart.push({
@@ -74,7 +73,6 @@ export default function MlProductOverview({
           addToCartInvited();
           return;
         }
-      }
 
       const cartRef = doc(db, "carts", currentUser.uid); // Referencia al carrito del usuario
       const cartSnap = await getDoc(cartRef);
@@ -100,6 +98,8 @@ export default function MlProductOverview({
         // Si el producto ya existe, incrementa la cantidad
         items[existingItemIndex].quantity += 1;
 
+        localStorage.setItem("guestCart", JSON.stringify(items));
+
         // Mostrar SweetAlert al completar la operación con éxito
         Swal.fire({
           position: "center",
@@ -118,7 +118,7 @@ export default function MlProductOverview({
           quantity: 1,
           srcImage: srcImage,
         });
-
+        localStorage.setItem("guestCart", JSON.stringify(items));
         // Mostrar SweetAlert al completar la operación con éxito
         Swal.fire({
           position: "center",
