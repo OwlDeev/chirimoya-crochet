@@ -257,7 +257,8 @@ const Completion: React.FC<CompletionProps> = ({}) => {
       cleanCartProducts(); // Limpia el carrito
       cleanCart();
 
-      const response = await fetch("https://chirimoyacrochet.com:5253/send-email", {
+      // const response = await fetch("https://chirimoyacrochet.com:5253/send-email", {
+      const response = await fetch("https://localhost:5253/send-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

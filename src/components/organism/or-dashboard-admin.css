@@ -1,0 +1,14 @@
+.div-main-dashboard-admin {
+    width: 100%;
+    height: 100%;
+    margin-top: 20px !important;
+  }
+
+/* Desktop */
+@media (min-width: 768px) {
+
+}
+
+/* media query para celular */
+@media (max-width: 767px) {
+}

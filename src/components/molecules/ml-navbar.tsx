@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import useState from "react-usestateref";
 import { Link } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
+import { AiOutlineDashboard } from "react-icons/ai";
+import { AiOutlineProduct } from "react-icons/ai";
 import "./ml-navbar.css";
 import { useCart } from "../context/cart-context";
 import { FaSearch } from "react-icons/fa";
@@ -15,6 +17,7 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import OrModalViewOrder from "../organism/or-modal-view-order";
@@ -27,6 +30,48 @@ const MlNavbar = () => {
   const [nameUser, setNameUser] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userType, setUserType, refUserType] = useState(0);
+
+  const navigationItemsIzq = {
+    user: [
+      {
+        path: "/login",
+        label: currentUser ? "PROFILE" : "LOGIN",
+        icon: <FaUser className="iconNavbar" />,
+        onClick: () => closeMenu,
+      },
+      {
+        path: "/detail-order",
+        label: "VIEW ORDER",
+        icon: <FaSearch className="iconNavbar" />,
+        onClick: () => toggleModal,
+      },
+    ],
+    admin: [
+      {
+        path: "/dashboard-admin",
+        label: "DASHBOARD",
+        icon: <AiOutlineDashboard className="iconNavbar" />,
+      },
+      {
+        path: "/manage-products",
+        label: "MANAGE PRODUCTS",
+        icon: <AiOutlineProduct className="iconNavbar" />,
+      },
+    ],
+  };
+
+  const navigationItemsDer = {
+    user: [
+      {
+        path: "/boutique",
+        label: "STORE",
+        icon: <FaStore className="iconNavbar" />,
+        onClick: () => closeMenu,
+      },
+    ],
+    admin: [{ path: "/manage-orders", label: "MANAGE ORDERS" }],
+  };
 
   useEffect(() => {
     // Escuchar cambios en el estado de autenticación del usuario
@@ -132,6 +177,18 @@ const MlNavbar = () => {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    const fetchUserType = async () => {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const type = await getUserType(currentUser.uid);
+        setUserType(type);
+      }
+    };
+
+    fetchUserType();
+  }, [currentUser]);
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -177,6 +234,31 @@ const MlNavbar = () => {
     closeMenu();
   };
 
+  const getUserRole = (typeUser: number) => {
+    if (typeUser === 2) return "admin";
+    return "user"; // Por defecto, usuario normal
+  };
+
+  const getUserType = async (uid: string) => {
+    try {
+      // Referencia al documento del usuario
+      const userRef = doc(db, "user", uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        console.log("Tipo de usuario:", userData.typeUser);
+        return userData.typeUser;
+      } else {
+        console.log("No se encontró el usuario.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error al obtener el tipo de usuario:", error);
+      return null;
+    }
+  };
+
   return (
     <div className="flex w-full" ref={menuRef}>
       <header className="navbar-fixed">
@@ -186,7 +268,18 @@ const MlNavbar = () => {
             <nav className="relative flex items-center justify-between h-16 lg:h-20">
               {/* Menú de escritorio */}
               <div className="hidden lg:flex lg:items-center lg:space-x-10">
-                <Link
+                {navigationItemsIzq[getUserRole(userType)]?.map(
+                  (item, index) => (
+                    <Link
+                      key={index}
+                      to={item.path}
+                      className="text-base font-medium text-white cursor-pointer items-center button-cart"
+                    >
+                      {item.label} {"icon" in item ? item.icon : null}
+                    </Link>
+                  )
+                )}
+                {/* <Link
                   to="/login"
                   className="whitespace-nowrap text-base font-medium text-white cursor-pointer items-center button-cart"
                   onClick={closeMenu}
@@ -202,7 +295,7 @@ const MlNavbar = () => {
                   {" "}
                   VIEW ORDER
                   <FaSearch className="iconNavbar" />
-                </button>
+                </button> */}
               </div>
 
               {/* Logo */}
@@ -220,7 +313,44 @@ const MlNavbar = () => {
 
               {/* Menú de escritorio y carrito */}
               <div className="hidden lg:flex lg:items-center lg:space-x-10">
-                <Link
+                {navigationItemsDer[getUserRole(userType)]?.map(
+                  (item, index) => (
+                    <Link
+                      key={index}
+                      to={item.path}
+                      className="text-base font-medium text-white cursor-pointer items-center button-cart"
+                    >
+                      {item.label} {"icon" in item ? item.icon : null}
+                    </Link>
+                  )
+                )}
+                {getUserRole(userType) === "admin" ? (
+                  <></>
+                ) : (
+                  <div
+                    onClick={toggleCart}
+                    className="cursor-pointer flex items-center button-cart"
+                  >
+                    <span className="text-base font-medium text-white">
+                      CART
+                    </span>
+                    <FaCartShopping className="iconNavbar"></FaCartShopping>
+                    <span className="text-base font-medium text-white pl-2">
+                      {itemCar}
+                    </span>
+                  </div>
+                )}
+                {/* <div
+                  onClick={toggleCart}
+                  className="cursor-pointer flex items-center button-cart"
+                >
+                  <span className="text-base font-medium text-white">CART</span>
+                  <FaCartShopping className="iconNavbar"></FaCartShopping>
+                  <span className="text-base font-medium text-white pl-2">
+                    {itemCar}
+                  </span>
+                </div> */}
+                {/* <Link
                   to="/boutique"
                   className="text-base font-medium text-white cursor-pointer items-center button-cart"
                   onClick={closeMenu}
@@ -229,7 +359,7 @@ const MlNavbar = () => {
                   <FaStore className="iconNavbar" />
                 </Link>
 
-                {/* Icono del carrito */}
+                // Icono del carrito 
                 <div
                   onClick={toggleCart}
                   className="cursor-pointer flex items-center button-cart"
@@ -239,7 +369,7 @@ const MlNavbar = () => {
                   <span className="text-base font-medium text-white pl-2">
                     {itemCar}
                   </span>
-                </div>
+                </div> */}
               </div>
 
               <div className="lg:hidden flex items-center">
@@ -275,7 +405,7 @@ const MlNavbar = () => {
                   className="py-2 text-base font-medium text-black flex flex-row"
                   onClick={closeMenu}
                 >
-                  <FaStore className="iconNavbarMobile"/>
+                  <FaStore className="iconNavbarMobile" />
                   Store
                 </Link>
                 <button

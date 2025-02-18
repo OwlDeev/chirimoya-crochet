@@ -1,0 +1,13 @@
+.div-main-upload-image{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.imageAddProducto{
+    height: 400px !important;
+    object-fit: cover;    /* Recorta la imagen para que llene el contenedor */
+    object-position: 50% 50%; /* Centra la parte visible de la imagen */
+    display: block;
+}

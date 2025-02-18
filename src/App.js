@@ -19,6 +19,8 @@ import Payment from "./components/molecules/Payment";
 import Completion from "./components/molecules/Completion";
 import OrFloatingWhatsapp from "./components/organism/or-floating-whatsapp";
 import MlModalViewOrder from "./components/organism/or-modal-view-order";
+import OrDashboardAdmin from "./components/organism/or-dashboard-admin";
+import OrManageProducts from "./components/organism/or-manage-products";
 import { CartProvider, useCart } from "./components/context/cart-context"; // Importa el contexto y el hook
 const imageUrl = "/assets/imgs/hero-test.jpg";
 
@@ -73,11 +75,13 @@ function AppContent() {
           <Route path="/create-account" element={<OrCreateAccount />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/completion" element={<Completion />} />
+          <Route path="/dashboard-admin" element={<OrDashboardAdmin />} />
+          <Route path="/manage-products" element={<OrManageProducts />} />
           <Route path="/view-order" element={<MlModalViewOrder />} />
         </Routes>
       </div>
-       {/* 📌 Ícono flotante de WhatsApp */}
-       <OrFloatingWhatsapp />
+      {/* 📌 Ícono flotante de WhatsApp */}
+      <OrFloatingWhatsapp />
       <MlFooter />
     </div>
   );

@@ -26,6 +26,7 @@ interface MlProfile {
   fullName?: string | null; // Título del modal
   EmailAddress?: string | null;
   photoURL?: string | null; // Descripción opcional
+  typeUser?:number | 0
 }
 
 interface Item {
@@ -96,6 +97,9 @@ export default function MlProfile({ EmailAddress = "" }: MlProfile) {
       setFullName(fullnameData);
       setPhone(phoneData);
 
+      if(userData.typeUser === 2){
+        navigate("/dashboard-admin");
+      }
       console.log("Nombre completo:", fullnameData);
       console.log("Teléfono:", phoneData);
     } else {

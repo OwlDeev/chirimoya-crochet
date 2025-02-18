@@ -175,15 +175,6 @@ const MlLogin: React.FC<MlLoginProps> = () => {
                   Sign in
                 </button>
               </div>
-
-              {/* <div className="div-google-login">
-                <img
-                  src={`/assets/imgs/swg.jpg`}
-                  alt="Logo"
-                  className="w-full h-full cursor-pointer"
-                  onClick={signInWithGoogle}
-                />
-              </div> */}
               <div className="div-google-login">
                 <img
                   src="/assets/imgs/swg.jpg"

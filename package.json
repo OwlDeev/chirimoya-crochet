@@ -3,7 +3,7 @@
   "description": "Version 2.8, last changes before of migration vps",
   "version": "0.2.8",
   "private": true,
-  "proxy":"https://chirimoyacrochet.com",
+  "proxy":"https://www.chirimoyacrochet.com:5253",
   "dependencies": {
     "@stripe/react-stripe-js": "^1.10.0",
     "@stripe/stripe-js": "^1.35.0",

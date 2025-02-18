@@ -29,7 +29,7 @@ const OrModalViewOrder = ({
               placeholder="EJ: 123456789"
               type="text"
               autoComplete="orderId"
-              className="h-full w-full pb-0 block flex bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6 input-modal-view-order"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
               value={orderId || ""}
               onChange={(e) => setOrderId(e.target.value)}
             />
