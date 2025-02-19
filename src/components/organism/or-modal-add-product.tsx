@@ -56,6 +56,8 @@ const OrModalManageProduct = ({
         desc: highlightsProduct,
         imageAlt: detailsProduct,
         name: nameProduct,
+        name_lower:nameProduct.toLowerCase(),
+        tokens: nameProduct.toLowerCase().split(" "),
         price: priceProduct,
         href: selected.id,
         srcImage: imageUrl,

@@ -2,7 +2,15 @@ import { useEffect } from "react";
 import useState from "react-usestateref";
 import { db } from "../../config/firebase-config"; // Importa tu configuración de Firebase
 import "./or-manage-products.css";
-import { getDocs, collection } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  startAt,
+  endAt,
+  getDocs,
+} from "firebase/firestore";
 import {
   Label,
   Listbox,
@@ -41,6 +49,7 @@ export default function OrManageProducts({}: IManageProducts) {
   // Estado para la página actual
   const [currentPage, setCurrentPage] = useState(1);
   const productCollectionRef = collection(db, "productos");
+  const [productNameAdmin, setProductNameAdmin] = useState("");
   const [productList, setProductList] = useState<
     {
       id: string;
@@ -83,7 +92,6 @@ export default function OrManageProducts({}: IManageProducts) {
         name: doc.data().name || "", // Nombre del producto
         price: doc.data().price || 0, // Precio del producto
         srcImage: doc.data().srcImage || "", // URL de la imagen
-        type: doc.data().type || 0, // Tipo de producto
       }));
       setProductList(filteredData);
     } catch (error) {
@@ -93,6 +101,51 @@ export default function OrManageProducts({}: IManageProducts) {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
     getProductList();
+  };
+
+  const searchProduct = async () => {
+    try {
+      // Construimos la query usando la sintaxis modular
+      const palabrasBuscadas = productNameAdmin.toLowerCase().split(" "); // ["crochet", "top", "and", "skirt", "set"]
+      let querySearchProduct: any;
+
+      // busqueda por nombre
+      if (selected.id === 0 && productNameAdmin !== "") {
+        querySearchProduct = query(
+          collection(db, "productos"),
+          where("tokens", "array-contains-any", palabrasBuscadas)
+        );
+      } // busqueda sin nombre ni tipo
+      else if (
+        selected.id === 0 &&
+        (productNameAdmin === "" || productNameAdmin === " ")
+      ) {
+        getProductList();
+        return;
+      } // busqueda por tipo y sin nombre
+      else if (
+        selected.id !== 0 &&
+        (productNameAdmin === "" || productNameAdmin === " ")
+      ) {
+        querySearchProduct = query(
+          collection(db, "productos"),
+          where("href", "==", selected.id)
+        );
+      }
+
+      const snapshot = await getDocs(querySearchProduct);
+      const resultados: any[] = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data && typeof data === "object") {
+          resultados.push({ id: doc.id, ...data });
+        }
+      });
+      setProductList(resultados);
+    } catch (error) {
+      console.error("Error al buscar productos:", error);
+      return [];
+    }
   };
 
   return (
@@ -118,8 +171,8 @@ export default function OrManageProducts({}: IManageProducts) {
                     type="text"
                     className="input-name-product flex bg-transparent py-2.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
                     placeholder="Ej: Totebag cute"
-                    // value={"fullname" || ""}
-                    // onChange={(e) => setFullName(e.target.value)}
+                    value={productNameAdmin || ""}
+                    onChange={(e) => setProductNameAdmin(e.target.value)}
                   />
                 </div>
               </div>
@@ -164,8 +217,12 @@ export default function OrManageProducts({}: IManageProducts) {
           </div>
 
           <div className="div-button-action">
-            <button className="button-cart" onClick={toggleModal}>Add product</button>
-            <button className="button-cart">Search</button>
+            <button className="button-cart" onClick={toggleModal}>
+              Add product
+            </button>
+            <button className="button-cart" onClick={searchProduct}>
+              Search
+            </button>
           </div>
 
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
