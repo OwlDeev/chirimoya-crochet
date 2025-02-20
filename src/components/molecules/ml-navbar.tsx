@@ -400,7 +400,7 @@ const MlNavbar = () => {
           <div className="lg:hidden div-menu-mobile-navbar">
             <nav className="px-4 py-4 mx-auto sm:px-6 lg:px-8">
               <div className="flex flex-col space-y-2">
-                <Link
+                {/* <Link
                   to="/boutique"
                   className="py-2 text-base font-medium text-black flex flex-row"
                   onClick={closeMenu}
@@ -426,7 +426,18 @@ const MlNavbar = () => {
                   <span className="text-base font-medium text-white pl-2">
                     {itemCar}
                   </span>
-                </div>
+                </div> */}
+                {navigationItemsIzq[getUserRole(userType)]?.map(
+                  (item, index) => (
+                    <Link
+                      key={index}
+                      to={item.path}
+                      className="text-base font-medium text-white cursor-pointer items-center button-cart"
+                    >
+                      {item.label} {"icon" in item ? item.icon : null}
+                    </Link>
+                  )
+                )}
               </div>
               <hr className="my-4 border-gray-200" />
               <div className="flex flex-col space-y-2">

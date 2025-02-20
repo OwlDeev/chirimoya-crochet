@@ -60,6 +60,10 @@
 .list-box-button-mp{
   border: 1px black solid;
 }
+
+.div-listbox-manage-products{
+  padding-left: 0.5rem
+}
 /* Desktop */
 @media (min-width: 768px) {
 }
@@ -68,5 +72,9 @@
 @media (max-width: 767px) {
   .div-filter-search{
     flex-direction: column;
+  }
+
+  .div-listbox-manage-products{
+    padding-left: 0rem !important
   }
 }

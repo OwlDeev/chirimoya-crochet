@@ -6,9 +6,6 @@ import {
   collection,
   query,
   where,
-  orderBy,
-  startAt,
-  endAt,
   getDocs,
 } from "firebase/firestore";
 import {
@@ -50,6 +47,15 @@ export default function OrManageProducts({}: IManageProducts) {
   const [currentPage, setCurrentPage] = useState(1);
   const productCollectionRef = collection(db, "productos");
   const [productNameAdmin, setProductNameAdmin] = useState("");
+  const [productSelected, setProductSelected] = useState({
+    id: "",
+    desc: "",
+    href: 0,
+    imageAlt: "",
+    name: "",
+    price: 0,
+    srcImage: "",
+  });
   const [productList, setProductList] = useState<
     {
       id: string;
@@ -98,9 +104,37 @@ export default function OrManageProducts({}: IManageProducts) {
       console.log(error);
     }
   };
+
   const toggleModal = () => {
+    resetProduct();
     setIsModalOpen(!isModalOpen);
     getProductList();
+  };
+
+  const resetProduct = () => {
+    const productReset = {
+      id: "",
+      desc: "",
+      href: 0,
+      imageAlt: "",
+      name: "",
+      price: 0,
+      srcImage: "",
+    };
+    setProductSelected(productReset);
+  };
+
+  const modifyModal = (product: {
+    id: string;
+    desc: string;
+    href: number;
+    imageAlt: string;
+    name: string;
+    price: number;
+    srcImage: string;
+  }) => {
+    setIsModalOpen(!isModalOpen);
+    setProductSelected(product);
   };
 
   const searchProduct = async () => {
@@ -176,7 +210,7 @@ export default function OrManageProducts({}: IManageProducts) {
                   />
                 </div>
               </div>
-              <div className="w-full h-full pl-2">
+              <div className="w-full h-full div-listbox-manage-products">
                 <Listbox value={selected} onChange={setSelected}>
                   <Label className="block text-sm/6 font-medium text-gray-900">
                     Type
@@ -230,26 +264,31 @@ export default function OrManageProducts({}: IManageProducts) {
           </h2>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {currentProducts.map((product) => (
-              <div key={product.id} className="group relative">
+            {currentProducts.map((prod) => (
+              <div
+                key={prod.id}
+                className="group relative"
+                onClick={() => modifyModal(prod)}
+              >
                 <img
-                  alt={product.imageAlt}
-                  src={product.srcImage}
+                  alt={prod.imageAlt}
+                  src={prod.srcImage}
                   className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
                 />
                 <div className="mt-4 flex justify-between">
                   <div>
                     <h3 className="text-sm text-gray-700">
-                      <a href={String(product.href) || ""}>
+                      <div>
                         <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                      </a>
+                        {prod.name}
+                      </div>
                     </h3>
-                    <p className="mt-1 text-sm text-gray-500">{product.desc}</p>
+                    <p className="mt-1 text-sm text-gray-500">{prod.desc}</p>
                   </div>
                   <p className="text-sm font-medium text-gray-900">
-                    {product.price}
+                    {prod.price}
                   </p>
+                  |
                 </div>
               </div>
             ))}
@@ -288,7 +327,11 @@ export default function OrManageProducts({}: IManageProducts) {
         </div>
       </div>
       {isModalOpen && (
-        <OrModalManageProduct isOpen={isModalOpen} onClose={toggleModal} />
+        <OrModalManageProduct
+          isOpen={isModalOpen}
+          onClose={toggleModal}
+          productSelected={productSelected}
+        />
       )}
     </div>
   );

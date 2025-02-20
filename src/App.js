@@ -22,6 +22,7 @@ import MlModalViewOrder from "./components/organism/or-modal-view-order";
 import OrDashboardAdmin from "./components/organism/or-dashboard-admin";
 import OrManageProducts from "./components/organism/or-manage-products";
 import { CartProvider, useCart } from "./components/context/cart-context"; // Importa el contexto y el hook
+import OrManageOrders from "./components/organism/or-manage-orders";
 const imageUrl = "/assets/imgs/hero-test.jpg";
 
 function AppContent() {
@@ -77,6 +78,7 @@ function AppContent() {
           <Route path="/completion" element={<Completion />} />
           <Route path="/dashboard-admin" element={<OrDashboardAdmin />} />
           <Route path="/manage-products" element={<OrManageProducts />} />
+          <Route path="/manage-orders" element={<OrManageOrders />} />
           <Route path="/view-order" element={<MlModalViewOrder />} />
         </Routes>
       </div>

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./or-modal-add-product.css";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { FaSave } from "react-icons/fa";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import Swal from "sweetalert2";
 import {
@@ -38,11 +38,20 @@ const typeProduct = [
 const OrModalManageProduct = ({
   isOpen,
   onClose,
+  productSelected,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  productSelected: {
+    id: string;
+    desc: string;
+    href: number;
+    imageAlt: string;
+    name: string;
+    price: number;
+    srcImage: string;
+  };
 }) => {
-  const [orderId, setOrderId] = useState("");
   const [nameProduct, setNameProduct] = useState("");
   const [priceProduct, setPriceProduct] = useState(0);
   const [highlightsProduct, setHighlightsProduct] = useState("");
@@ -50,25 +59,65 @@ const OrModalManageProduct = ({
   const [imageUrl, setImageUrl] = useState(""); // 📌 Estado para la imagen
   const [selected, setSelected] = useState(typeProduct[0]);
 
+  useEffect(() => {
+    if (productSelected.id !== "") {
+      setNameProduct(productSelected.name);
+      setPriceProduct(productSelected.price);
+      setHighlightsProduct(productSelected.desc);
+      setDetailsProduct(productSelected.imageAlt);
+      setImageUrl(productSelected.srcImage);
+      definedTypeProduct();
+    }
+  }, []);
+
+  const definedTypeProduct = () => {
+    for (let typeProd of typeProduct) {
+      if (productSelected.href === typeProd.id) {
+        setSelected(typeProd);
+      }
+    }
+  };
+
   const addProductWithCustomId = async () => {
     try {
-      await addDoc(collection(db, "productos"), {
-        desc: highlightsProduct,
-        imageAlt: detailsProduct,
-        name: nameProduct,
-        name_lower:nameProduct.toLowerCase(),
-        tokens: nameProduct.toLowerCase().split(" "),
-        price: priceProduct,
-        href: selected.id,
-        srcImage: imageUrl,
-      });
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Product added",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      if(productSelected.id !== ""){
+        await updateDoc(doc(db, "productos", productSelected.id), {
+          desc: highlightsProduct,
+          imageAlt: detailsProduct,
+          name: nameProduct,
+          name_lower: nameProduct.toLowerCase(),
+          tokens: nameProduct.toLowerCase().split(" "),
+          price: priceProduct,
+          href: selected.id,
+          srcImage: imageUrl,
+        });
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Product update",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }else{
+        await addDoc(collection(db, "productos"), {
+          desc: highlightsProduct,
+          imageAlt: detailsProduct,
+          name: nameProduct,
+          name_lower: nameProduct.toLowerCase(),
+          tokens: nameProduct.toLowerCase().split(" "),
+          price: priceProduct,
+          href: selected.id,
+          srcImage: imageUrl,
+        });
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Product added",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+
     } catch (error) {
       console.error("Error agregando producto:", error);
     }
@@ -85,12 +134,12 @@ const OrModalManageProduct = ({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="div-main-modal-manage-product">
-          <div className="w-full h-full">
-            <MlUploadImage onImageUpload={setImageUrl} />
+          <div className="w-full h-full div-image-modal-manage-product">
+            <MlUploadImage onImageUpload={setImageUrl} srcImageModify={productSelected.srcImage}/>
           </div>
 
           <div className="w-full h-full flex flex-col pl-4">
-            <div className="w-full h-full flex flex-row pb-2">
+            <div className="div-input-modal-manage-product">
               <label className="label-add-product">Name</label>
               <div className="h-full w-full flex items-center div-input-modal-view-order">
                 <input
@@ -104,7 +153,7 @@ const OrModalManageProduct = ({
                 />
               </div>
             </div>
-            <div className="w-full h-full flex flex-row pt-2 pb-2">
+            <div className="div-input-modal-manage-product pt-2">
               <label className="label-add-product">Highlights</label>
               <div className="h-full w-full flex items-center div-input-modal-view-order">
                 <input
@@ -118,7 +167,7 @@ const OrModalManageProduct = ({
                 />
               </div>
             </div>
-            <div className="w-full h-full flex flex-row pt-2 pb-2">
+            <div className="div-input-modal-manage-product pt-2">
               <label className="label-add-product">Details</label>
               <div className="h-full w-full flex items-center div-input-modal-view-order">
                 <input
@@ -132,7 +181,7 @@ const OrModalManageProduct = ({
                 />
               </div>
             </div>
-            <div className="w-full h-full flex flex-row pt-2 pb-2">
+            <div className="div-input-modal-manage-product pt-2">
               <label className="label-add-product">Type</label>
               <div className="h-full w-full flex items-center div-input-modal-view-order">
                 <Listbox value={selected} onChange={setSelected}>
@@ -169,7 +218,7 @@ const OrModalManageProduct = ({
                 </Listbox>
               </div>
             </div>
-            <div className="w-full h-full flex flex-row pt-2 pb-2">
+            <div className="div-input-modal-manage-product pt-2">
               <label className="label-add-product">Price</label>
               <div className="h-full w-full flex items-center div-input-modal-view-order">
                 <input

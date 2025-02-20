@@ -1,17 +1,68 @@
-.div-main-modal-manage-product{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    padding-top: 20px;
-    padding-bottom: 20px;
+.div-main-modal-manage-product {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-.label-add-product{
-    width: 30%;
-    text-align: justify;
+.label-add-product {
+  width: 30%;
+  text-align: justify;
 }
 
-.list-box-button-mp{
-    border: 1px black solid;
+.list-box-button-mp {
+  border: 1px black solid;
+}
+
+.div-input-modal-manage-product {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 0.5rem; /* Equivalente a pb-2 en Tailwind */
+}
+
+.modal-content{
+    
+}
+
+/* media query para celular */
+@media (max-width: 767px) {
+  .div-main-modal-manage-product {
+    flex-direction: column;
   }
+
+  .div-image-modal-manage-product {
+    padding-bottom: 20px;
+  }
+
+  .div-input-modal-manage-product {
+    flex-direction: column;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto; /* Permite que se haga scroll vertical en el overlay */
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: #fff;
+    border-radius: 8px;
+    max-height: 90vh;  /* Limita la altura del modal para que no supere el 90% del viewport */
+    overflow-y: auto;  /* Activa el scroll vertical cuando el contenido es mayor que max-height */
+    width: 95%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+}

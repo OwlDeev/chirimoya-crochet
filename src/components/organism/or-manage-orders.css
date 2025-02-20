@@ -1,0 +1,24 @@
+.div-main-manage-orders{
+    padding: 12px !important;
+}
+
+.div-list-orders{
+    width: 100%;
+    height: 100%;
+}
+
+.card-order{
+    width: 200px;
+    height: 200px;
+    margin: 20px;
+    border-radius: 10px;
+    border: 10px solid rgb(122, 122, 122); /* Define ancho, estilo y color */
+    background-color: rgb(179, 179, 179);
+}
+
+.property-card-order{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}

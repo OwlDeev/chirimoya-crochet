@@ -1,10 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "./ml-upload-image.css";
 
-const UploadImage = ({ onImageUpload }: { onImageUpload: (url: string) => void }) => {
+const UploadImage = ({
+  onImageUpload,
+  srcImageModify,
+}: {
+  onImageUpload: (url: string) => void;
+  srcImageModify: string;
+}) => {
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(()=>{
+    if(srcImageModify !== ""){
+      setImageUrl(srcImageModify)
+    }
+  },[])
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -52,7 +64,14 @@ const UploadImage = ({ onImageUpload }: { onImageUpload: (url: string) => void }
 
   return (
     <div className="div-main-upload-image">
-      {imageUrl && <img src={imageUrl} alt="Uploaded" width="100%" className="imageAddProducto" />}
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt="Uploaded"
+          width="100%"
+          className="imageAddProducto"
+        />
+      )}
       <input
         type="file"
         onChange={handleImageUpload}
