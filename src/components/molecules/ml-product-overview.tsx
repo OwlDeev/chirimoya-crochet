@@ -207,11 +207,11 @@ export default function MlProductOverview({
             </form>
           </div>
 
-          <div className="div-main-card-module py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
+          <div className="div-main-card-module pt-10 pb-5 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pr-8 lg:pt-6">
             <div className="div-main-card-module-izq">
               <h3 className="sr-only">Description</h3>
 
-              <div className="h-full w-full ">
+              <div className="div-image-product-overview">
                 <img
                   alt={imageAlt}
                   src={srcImage}

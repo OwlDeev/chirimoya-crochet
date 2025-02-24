@@ -1,23 +1,66 @@
-@media (max-width: 767px) {
-    .modal-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la pantalla */
-      padding-top: 1px;
-    }
-  
-    .modal-content {
-      width: 90%; /* Ajusta el ancho del modal */
-      max-width: 400px; /* Ancho máximo del modal */
-      margin: auto; /* Centra el modal horizontalmente */
-    }
+@media (min-width: 640px) {
+  .modal-content-product {
+    margin-top: 2rem; /* my-8 => 2rem */
+    margin-bottom: 2rem;
+    width: 100%; /* w-4/5 => 80% */
   }
 
-  .modal-container{
+  .modal-content-product[data-closed] {
+    transform: translateY(0) scale(0.95);
+  }
+}
+
+@media (max-width: 767px) {
+  .modal-container-product {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la pantalla */
-    padding-top: 100px;
+    padding-top: 1px;
   }
+
+  .modal-content-product {
+    width: 100% !important; /* Ajusta el ancho del modal */
+    margin: auto !important; /* Centra el modal horizontalmente */
+  }
+}
+
+.modal-content-product {
+  position: relative;
+  transform: none; /* Por defecto sin transform */
+  overflow: hidden;
+  border-radius: 0.5rem; /* rounded-lg => 0.5rem */
+  background-color: #fff; /* bg-white */
+  text-align: left; /* text-left */
+  /* shadow-xl */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* transition-all => aplicamos la transición a todas las propiedades */
+  transition-property: all;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+.modal-content-product[data-closed] {
+  transform: translateY(1rem);
+  opacity: 0;
+}
+
+.modal-content-product[data-enter] {
+  transition-duration: 300ms;
+  transition-timing-function: ease-out;
+}
+
+.modal-content-product[data-leave] {
+  transition-duration: 200ms;
+  transition-timing-function: ease-in;
+}
+
+.modal-container-product {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la pantalla */
+  padding-top: 100px;
+}

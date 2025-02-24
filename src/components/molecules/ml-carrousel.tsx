@@ -85,7 +85,7 @@ export default function Example() {
         pagination={{ clickable: true }}
         autoplay={{ delay: 500 }}
         modules={[Navigation, Pagination]}
-        className=""
+        className="w-full"
       >
         {productList.map((product) => (
           <SwiperSlide key={product.id} className="cursor-pointer">

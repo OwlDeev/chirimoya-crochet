@@ -173,6 +173,7 @@ const Completion: React.FC<CompletionProps> = ({}) => {
           date: new Date().toLocaleDateString(), // Fecha actual
         },
       ],
+      lastUpdateDate: new Date().toLocaleDateString()
     });
 
     // console.log("Pedido creado exitosamente.");
@@ -219,6 +220,7 @@ const Completion: React.FC<CompletionProps> = ({}) => {
             date: new Date().toLocaleDateString(), // Fecha actual
           },
         ],
+        lastUpdateDate: new Date().toLocaleDateString()
       });
 
       console.log("Pedido creado exitosamente.");

@@ -28,6 +28,11 @@
     
 }
 
+.color-button-delete {
+  background-color: #f80400;
+  color: white;
+}
+
 /* media query para celular */
 @media (max-width: 767px) {
   .div-main-modal-manage-product {

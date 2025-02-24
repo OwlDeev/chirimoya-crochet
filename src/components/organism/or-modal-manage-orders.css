@@ -1,0 +1,11 @@
+.div-main-modal-manage-orders{
+    padding: 20px !important;
+}
+
+.modal-content-modal-manage-orders{
+    width: 50% !important;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}

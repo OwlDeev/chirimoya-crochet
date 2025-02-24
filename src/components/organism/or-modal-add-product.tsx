@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./or-modal-add-product.css";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { FaSave } from "react-icons/fa";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../../config/firebase-config";
 import Swal from "sweetalert2";
 import {
@@ -16,24 +24,12 @@ import {
 import MlUploadImage from "../molecules/ml-upload-image";
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 
-const typeProduct = [
-  {
-    id: 0,
-    name: "All",
-  },
-  {
-    id: 1,
-    name: "Clothes",
-  },
-  {
-    id: 2,
-    name: "Amigorumi",
-  },
-  {
-    id: 3,
-    name: "Totebag",
-  },
-];
+interface ITypeProduct {
+  id: string;
+  href: number;
+  name: string;
+}
+
 
 const OrModalManageProduct = ({
   isOpen,
@@ -57,22 +53,32 @@ const OrModalManageProduct = ({
   const [highlightsProduct, setHighlightsProduct] = useState("");
   const [detailsProduct, setDetailsProduct] = useState("");
   const [imageUrl, setImageUrl] = useState(""); // 📌 Estado para la imagen
-  const [selected, setSelected] = useState(typeProduct[0]);
+  const [selected, setSelected] = useState<ITypeProduct>({ id: "", href: 0, name: "All" });
+  const typeProductCollecionRef = collection(db, "tipoProducto");
+  const [typeProductList, setTypeProductList] = useState<ITypeProduct[]>([]);
 
   useEffect(() => {
+    getTypeProductList()
     if (productSelected.id !== "") {
       setNameProduct(productSelected.name);
       setPriceProduct(productSelected.price);
       setHighlightsProduct(productSelected.desc);
       setDetailsProduct(productSelected.imageAlt);
       setImageUrl(productSelected.srcImage);
-      definedTypeProduct();
+    } else {
+      toggleHidden()
     }
   }, []);
 
+  useEffect(() => {
+    if (typeProductList) {
+      definedTypeProduct();
+    }
+  }, [typeProductList])
+
   const definedTypeProduct = () => {
-    for (let typeProd of typeProduct) {
-      if (productSelected.href === typeProd.id) {
+    for (let typeProd of typeProductList) {
+      if (productSelected.href  === typeProd.href) {
         setSelected(typeProd);
       }
     }
@@ -80,7 +86,7 @@ const OrModalManageProduct = ({
 
   const addProductWithCustomId = async () => {
     try {
-      if(productSelected.id !== ""){
+      if (productSelected.id !== "") {
         await updateDoc(doc(db, "productos", productSelected.id), {
           desc: highlightsProduct,
           imageAlt: detailsProduct,
@@ -88,7 +94,7 @@ const OrModalManageProduct = ({
           name_lower: nameProduct.toLowerCase(),
           tokens: nameProduct.toLowerCase().split(" "),
           price: priceProduct,
-          href: selected.id,
+          href: selected.href,
           srcImage: imageUrl,
         });
         Swal.fire({
@@ -98,7 +104,7 @@ const OrModalManageProduct = ({
           showConfirmButton: false,
           timer: 1500,
         });
-      }else{
+      } else {
         await addDoc(collection(db, "productos"), {
           desc: highlightsProduct,
           imageAlt: detailsProduct,
@@ -106,7 +112,7 @@ const OrModalManageProduct = ({
           name_lower: nameProduct.toLowerCase(),
           tokens: nameProduct.toLowerCase().split(" "),
           price: priceProduct,
-          href: selected.id,
+          href: selected.href,
           srcImage: imageUrl,
         });
         Swal.fire({
@@ -117,7 +123,6 @@ const OrModalManageProduct = ({
           timer: 1500,
         });
       }
-
     } catch (error) {
       console.error("Error agregando producto:", error);
     }
@@ -130,12 +135,45 @@ const OrModalManageProduct = ({
     onClose();
   };
 
+  const onDeleteProduct = async () => {
+    const productSelectedRef = doc(db, "productos", productSelected.id);
+    // Eliminar el carrito después de crear el pedido
+    await deleteDoc(productSelectedRef);
+    onClose();
+  };
+
+  function toggleHidden() {
+    const elemento = document.getElementById("button-delete-add-product");
+    // Si el elemento tiene la clase 'hidden', la quitamos; si no, la agregamos.
+    if (elemento) {
+      elemento.classList.toggle("hidden");
+    }
+  }
+
+  const getTypeProductList = async () => {
+    try {
+      const data = await getDocs(typeProductCollecionRef);
+      const filteredData = data.docs.map((doc: any) => {
+        const docData = doc.data();
+        return {
+          id: doc.id,
+          name: docData.name ?? "", // Asegúrate de que exista o usar array vacío
+          href: docData.href ?? "",
+        } as ITypeProduct; // Forzamos a que coincida con la interfaz
+      });
+      setTypeProductList(filteredData);
+    } catch (error) { }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="div-main-modal-manage-product">
           <div className="w-full h-full div-image-modal-manage-product">
-            <MlUploadImage onImageUpload={setImageUrl} srcImageModify={productSelected.srcImage}/>
+            <MlUploadImage
+              onImageUpload={setImageUrl}
+              srcImageModify={productSelected.srcImage}
+            />
           </div>
 
           <div className="w-full h-full flex flex-col pl-4">
@@ -200,7 +238,7 @@ const OrModalManageProduct = ({
                       transition
                       className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-slate-50 py-1 text-base ring-1 shadow-lg ring-black/5 focus:outline-hidden data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
                     >
-                      {typeProduct.map((type: any) => (
+                      {typeProductList.map((type: any) => (
                         <ListboxOption
                           key={type.id}
                           value={type}
@@ -242,6 +280,16 @@ const OrModalManageProduct = ({
             >
               Back
               <IoMdArrowRoundBack className="mt-1 ml-2" />
+            </button>
+          </div>
+
+          <div id="button-delete-add-product" className="w-full h-full flex">
+            <button
+              onClick={onDeleteProduct}
+              className="color-button-delete flex items-center justify-center rounded-md border border-transparent px-6 py-3 text-base font-medium"
+            >
+              Delete
+              <FaRegTrashCan className="mt-1 ml-2" />
             </button>
           </div>
 

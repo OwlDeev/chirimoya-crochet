@@ -5,6 +5,11 @@
   color: white;
 }
 
+.div-image-product-overview{
+  width: 400px;
+  height: 350px;
+}
+
 .iconNavbarContinue {
   /* display: flex; */
   justify-content: end;
@@ -13,9 +18,8 @@
 }
 
 .imageCardModal {
-  width: 100%;
   border-radius: 20px;
-  object-fit: cover; /* Ajusta la imagen, llenando el contenedor */
+  /* object-fit: cover; */
   object-position: center; /* Centra la imagen en el contenedor */
 }
 .div-main-card-module {
@@ -26,7 +30,7 @@
 .div-main-card-module-der {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 200px;
   height: 100%;
   padding: 10px;
 }
@@ -34,7 +38,7 @@
 .div-main-card-module-izq {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 420px;
   height: 100%;
   padding: 10px;
 }
